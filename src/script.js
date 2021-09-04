@@ -1,5 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
+import * as CANNON from "cannon";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -79,18 +80,33 @@ controls.enableDamping = true;
  * Objects
  */
 
-// Car
+// Floor
 
-const car = gltfLoader.load("/models/car/ferrari.glb", (model) => {
-    console.log(model.scene.children[5]);
-    scene.add(model.scene.children[5]);
+const plane = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(10, 10),
+    new THREE.MeshStandardMaterial({
+        metalness: 0.3,
+        roughness: 0.6,
+    })
+);
+
+plane.rotation.x = -Math.PI / 2;
+plane.receiveShadow = true;
+scene.add(plane);
+
+// Car
+gltfLoader.load("/models/car/ferrari.glb", (model) => {
+    const car = model.scene.children[5];
+    console.log(car);
+    car.scale.set(0.5, 0.5, 0.5);
+    car.position.y += 0.05;
+    console.log(car.position);
+    scene.add(car);
 });
 
 /**
  * World
  */
-
-// World init
 
 /**
  * Renderer
@@ -110,7 +126,7 @@ let lastElapsedTime = 0;
 
 const tick = () => {
     const elapsedTime = clock.getElapsedTime();
-    const deltaTime = elapsedTime - lastElapsedTime;
+    const delta = elapsedTime - lastElapsedTime;
     lastElapsedTime = elapsedTime;
 
     // Update controls
