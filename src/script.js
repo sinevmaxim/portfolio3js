@@ -1,6 +1,7 @@
 import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 /**
  * Base
@@ -10,6 +11,12 @@ const canvas = document.querySelector("canvas.webgl");
 
 // Scene
 const scene = new THREE.Scene();
+
+// Loading Manager
+const loadingManager = new THREE.LoadingManager();
+
+// Loaders
+const gltfLoader = new GLTFLoader(loadingManager);
 
 /**
  * Sizes
@@ -48,18 +55,42 @@ camera.position.y = 1;
 camera.position.z = 1;
 scene.add(camera);
 
-// Controls
+/**
+ * Lights
+ */
+
+// Ambient Light
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+
+// Directional Light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(0, 1, 0);
+
+// Adding to scene
+scene.add(ambientLight, directionalLight);
+
+/**
+ * Controls
+ */
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
 /**
- * Cube
+ * Objects
  */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
-);
-scene.add(cube);
+
+// Car
+
+const car = gltfLoader.load("/models/car/ferrari.glb", (model) => {
+    console.log(model.scene.children[5]);
+    scene.add(model.scene.children[5]);
+});
+
+/**
+ * World
+ */
+
+// World init
 
 /**
  * Renderer
