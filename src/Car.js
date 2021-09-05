@@ -1,32 +1,26 @@
 import * as THREE from "three";
-import CANNON from "cannon";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export default class Car {
     constructor(args) {
         this.physics = args.physics;
         this.time = args.time;
+        this.files = args.files;
+
+        this.object = new THREE.Object3D();
 
         this.initModels();
-        this.initPosition();
         this.initWheels();
+        this.initPosition();
     }
 
     initModels() {
         console.info("Car - Initialazing Models");
 
         this.models = {};
-        this.models.chassis = null;
-        this.models.wheel = null;
-        gltfLoader = new GLTFLoader();
+        console.log(this.files);
 
-        gltfLoader.load("/models/car/car.glb", (model) => {
-            this.models.chassis = model.scene;
-        });
-
-        gltfLoader.load("/models/car/wheel.glb", (model) => {
-            this.models.wheel = model.scene;
-        });
+        this.models.chassis = this.files.models.car.chassis;
+        this.models.wheel = this.files.models.car.wheel;
     }
 
     initPosition() {
@@ -50,8 +44,10 @@ export default class Car {
         this.wheels.items = [];
 
         for (let i = 0; i < 4; i++) {
-            const object = this.model.wheel.clone();
+            console.log(this.models);
+            const object = this.models.wheel.clone();
             this.wheels.items.push(object);
+            this.object.add(object);
         }
 
         this.time.on("tick", () => {

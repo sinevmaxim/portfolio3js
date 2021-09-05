@@ -16,8 +16,11 @@ export default class EventEmmiter {
 
     emit(_name, data) {
         console.info(`Emmited ${_name} event`);
-        for (const event of _event[_name]) {
-            event(data);
-        }
+        this._event[_name] = this._event[_name] || [];
+
+        const trigger = (callback) => {
+            callback(data);
+        };
+        this._event[_name].forEach(trigger);
     }
 }

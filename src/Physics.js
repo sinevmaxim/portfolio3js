@@ -4,6 +4,8 @@ import * as CANNON from "cannon";
 export default class Physics {
     constructor(args) {
         this.time = args.time;
+        this.object = new THREE.Object3D();
+
         this.initWorld();
         this.initMaterial();
         this.initFloor();
@@ -18,7 +20,7 @@ export default class Physics {
         console.info("Physics - Initialazing World");
 
         this.world = new CANNON.World();
-        this.world.broadphase = new CANNON.SAPBroadphase(world);
+        this.world.broadphase = new CANNON.SAPBroadphase(this.world);
         this.world.allowSleep = true;
         this.world.gravity.set(0, -9.81, 0);
     }
@@ -65,6 +67,7 @@ export default class Physics {
     initCar() {
         console.info("Physics - Initialazing Car");
         this.car = {};
+        this.car.chassis = {};
 
         this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.5));
         this.car.chassis.body = new CANNON.Body({ mass: 150 });
@@ -96,20 +99,20 @@ export default class Physics {
             chassisBody: this.car.chassis.body,
         });
 
-        this.options.chassisConnectionPointLocal.set(1, 1, 0);
-        this.car.vehicle.addWheel(options);
+        this.car.wheels.options.chassisConnectionPointLocal.set(1, 1, 0);
+        this.car.vehicle.addWheel(this.car.wheels.options);
 
         this.car.wheels.options.chassisConnectionPointLocal.set(1, -1, 0);
-        this.car.vehicle.addWheel(options);
+        this.car.vehicle.addWheel(this.car.wheels.options);
 
         this.car.wheels.options.chassisConnectionPointLocal.set(-1, 1, 0);
-        this.car.vehicle.addWheel(options);
+        this.car.vehicle.addWheel(this.car.wheels.options);
 
         this.car.wheels.options.chassisConnectionPointLocal.set(-1, -1, 0);
-        this.car.vehicle.addWheel(options);
+        this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.this.car.wheels.bodies = [];
-        for (wheelInfo of this.car.vehicle.wheelInfos) {
+        this.car.wheels.bodies = [];
+        for (const wheelInfo of this.car.vehicle.wheelInfos) {
             const cylinderShape = new CANNON.Cylinder(
                 wheelInfo.radius,
                 wheelInfo.radius,
@@ -139,20 +142,18 @@ export default class Physics {
         });
 
         this.car.model.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(
-                this.car.options.chassisDepth,
-                this.car.options.chassisWidth,
-                this.car.options.chassisHeight
-            ),
+            new THREE.BoxBufferGeometry(2, 1, 1),
             this.car.model.material
         );
+
+        this.object.add(this.car.model.chassis);
 
         this.car.model.wheels = [];
 
         const wheelGeometry = new THREE.CylinderBufferGeometry(
-            this.car.options.radius,
-            this.car.options.radius,
-            this.car.options.radius / 2,
+            this.car.wheels.options.radius,
+            this.car.wheels.options.radius,
+            this.car.wheels.options.radius / 2,
             8,
             1
         );
@@ -163,6 +164,7 @@ export default class Physics {
                 this.car.model.material
             );
             this.car.model.wheels.push(wheel);
+            this.object.add(wheel);
         }
 
         this.world.addEventListener("postStep", () => {
@@ -192,9 +194,6 @@ export default class Physics {
                 }
             }
         });
-
-        document.addEventListener("keydown", controlsHandler);
-        document.addEventListener("keyup", controlsHandler);
 
         this.car.options = {};
         this.car.options.maxSteerVal = 0.5;
@@ -266,5 +265,8 @@ export default class Physics {
                     break;
             }
         };
+
+        document.addEventListener("keydown", controlsHandler);
+        document.addEventListener("keyup", controlsHandler);
     }
 }
