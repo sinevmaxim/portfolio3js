@@ -96,36 +96,36 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 // Car
-gltfLoader.load("/models/car/car.glb", (model) => {
-    const car = model.scene;
-    console.log(car);
-    car.scale.set(0.5, 0.5, 0.5);
-    car.position.y += 0.05;
-    console.log(car.position);
-    scene.add(car);
-});
+// gltfLoader.load("/models/car/car.glb", (model) => {
+//     const car = model.scene;
+//     console.log(car);
+//     car.scale.set(0.5, 0.5, 0.5);
+//     car.position.y += 0.05;
+//     console.log(car.position);
+//     scene.add(car);
+// });
 
-gltfLoader.load("/models/car/wheel.glb", (model) => {
-    const car = model.scene;
-    console.log(car);
-    car.scale.set(0.5, 0.5, 0.5);
-    car.position.y += 0.05;
-    car.position.z -= 1.26;
-    car.quaternion = Math.PI;
-    console.log(car.position);
-    scene.add(car);
-});
+// gltfLoader.load("/models/car/wheel.glb", (model) => {
+//     const car = model.scene;
+//     console.log(car);
+//     car.scale.set(0.5, 0.5, 0.5);
+//     car.position.y += 0.05;
+//     car.position.z -= 1.26;
+//     car.quaternion = Math.PI;
+//     console.log(car.position);
+//     scene.add(car);
+// });
 
 // Cube
 
-const cube = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(2, 2, 2),
-    new THREE.MeshBasicMaterial({
-        side: THREE.DoubleSide,
-    })
-);
+// const cube = new THREE.Mesh(
+//     new THREE.BoxBufferGeometry(2, 2, 2),
+//     new THREE.MeshBasicMaterial({
+//         side: THREE.DoubleSide,
+//     })
+// );
 
-scene.add(cube);
+// scene.add(cube);
 
 /**
  * World

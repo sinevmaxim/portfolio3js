@@ -9,9 +9,12 @@ export default class Car {
 
         this.initModels();
         this.initPosition();
+        this.initWheels();
     }
 
     initModels() {
+        console.info("Car - Initialazing Models");
+
         this.models = {};
         this.models.chassis = null;
         this.models.wheel = null;
@@ -27,6 +30,8 @@ export default class Car {
     }
 
     initPosition() {
+        console.info("Car - Initialazing Position");
+
         this.time.on("tick", () => {
             this.models.chassis.position.copy(
                 this.physics.car.chassis.body.position
@@ -39,6 +44,8 @@ export default class Car {
     }
 
     initWheels() {
+        console.info("Car - Initialazing Wheels");
+
         this.wheels = {};
         this.wheels.items = [];
 

@@ -15,6 +15,8 @@ export default class Physics {
     }
 
     initWorld() {
+        console.info("Physics - Initialazing World");
+
         this.world = new CANNON.World();
         this.world.broadphase = new CANNON.SAPBroadphase(world);
         this.world.allowSleep = true;
@@ -22,6 +24,8 @@ export default class Physics {
     }
 
     initMaterial() {
+        console.info("Physics - Initialazing Material");
+
         this.materials = {};
         this.materials.defaultMaterial = new CANNON.Material("default");
 
@@ -44,6 +48,7 @@ export default class Physics {
     }
 
     initFloor() {
+        console.info("Physics - Initialazing Floor");
         this.floor = {};
         this.floor.body = new CANNON.Body({
             shape: new CANNON.Plane(),
@@ -58,6 +63,7 @@ export default class Physics {
     }
 
     initCar() {
+        console.info("Physics - Initialazing Car");
         this.car = {};
 
         this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.5));
