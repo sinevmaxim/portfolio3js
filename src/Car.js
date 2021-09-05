@@ -18,18 +18,18 @@ export default class Car {
 
         this.models = {};
 
-        // alert(this.files.models);
-        // console.log(this.files.models);
-
-        // console.log(this.files.models.car);
-        // console.log(this.files.models.car.chassis);
-        // console.log(this.files.models.car.wheel);
-
-        // this.models.chassis = this.files.models.car.chassis;
-        // this.models.wheel = this.files.models.car.wheel;
         this.models = this.files.models.car;
     }
+    
+    // alert(this.files.models);
+    // console.log(this.files.models);
 
+    // console.log(this.files.models.car);
+    // console.log(this.files.models.car.chassis);
+    // console.log(this.files.models.car.wheel);
+
+    // this.models.chassis = this.files.models.car.chassis;
+    // this.models.wheel = this.files.models.car.wheel;
     initPosition() {
         console.info("Car - Initialazing Position");
 

@@ -22,6 +22,7 @@ export default class Application {
         this.initPhysics();
         this.initCar();
         this.initLight();
+        this.initRender();
     }
 
     initRenderer() {
