@@ -52,6 +52,8 @@ export default class Application {
     }
 
     initFiles() {
+        console.info("Application - Initializing Files");
+
         this.files = new File();
     }
 

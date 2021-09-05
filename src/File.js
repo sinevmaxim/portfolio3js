@@ -3,7 +3,6 @@ import * as THREE from "three";
 
 export default class File {
     constructor() {
-        this.files = {};
         this.loaders = {};
         this.manager = new THREE.LoadingManager();
 
@@ -11,19 +10,16 @@ export default class File {
     }
 
     load() {
-        this.files.models = {};
-        this.files.models.car = {};
+        this.models = {};
+        this.models.car = {};
         this.loaders.gltfLoader = new GLTFLoader(this.manager);
 
         this.loaders.gltfLoader.load("/models/car/wheel.glb", (model) => {
-            this.files.models.car.wheel = model.scene;
-            console.info("WHEEL LOADED");
+            this.models.car.wheel =
+                model.scene.children[0].children[0];
         });
         this.loaders.gltfLoader.load("/models/car/car.glb", (model) => {
-            this.files.models.car.chassis = model.scene.children[0];
-            console.info("CAR LOADED");
+            this.models.car.chassis = model.scene.children[0];
         });
-
-        console.log(this.files.models);
     }
 }

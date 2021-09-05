@@ -17,10 +17,17 @@ export default class Car {
         console.info("Car - Initialazing Models");
 
         this.models = {};
-        console.log(this.files);
 
-        this.models.chassis = this.files.models.car.chassis;
-        this.models.wheel = this.files.models.car.wheel;
+        // alert(this.files.models);
+        // console.log(this.files.models);
+
+        // console.log(this.files.models.car);
+        // console.log(this.files.models.car.chassis);
+        // console.log(this.files.models.car.wheel);
+
+        // this.models.chassis = this.files.models.car.chassis;
+        // this.models.wheel = this.files.models.car.wheel;
+        this.models = this.files.models.car;
     }
 
     initPosition() {
@@ -45,6 +52,8 @@ export default class Car {
 
         for (let i = 0; i < 4; i++) {
             console.log(this.models);
+            console.log(this.models.chassis);
+            console.log(this.models.wheel);
             const object = this.models.wheel.clone();
             this.wheels.items.push(object);
             this.object.add(object);
