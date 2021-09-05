@@ -2,6 +2,18 @@ import * as THREE from "three";
 import * as CANNON from "cannon";
 
 export default class Physics {
+    constructor(args) {
+        this.time = args.time;
+        this.initWorld();
+        this.initMaterial();
+        this.initFloor();
+        this.initCar();
+
+        this.time.on("tick", () => {
+            this.world.step(1 / 60, this.time.delta, 3);
+        });
+    }
+
     initWorld() {
         this.world = new CANNON.World();
         this.world.broadphase = new CANNON.SAPBroadphase(world);
@@ -42,17 +54,17 @@ export default class Physics {
             -Math.PI / 2
         );
 
-        world.addBody(floorBody);
+        this.world.addBody(this.floor.body);
     }
 
     initCar() {
         this.car = {};
 
-        this.car.chassisShape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.5));
-        this.car.chassisBody = new CANNON.Body({ mass: 150 });
-        this.car.chassisBody.addShape(chassisShape);
-        this.car.chassisBody.position.set(0, 0, 4);
-        this.car.chassisBody.angularVelocity.set(0, 0, 0.5);
+        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.5));
+        this.car.chassis.body = new CANNON.Body({ mass: 150 });
+        this.car.chassis.body.addShape(this.car.chassis.shape);
+        this.car.chassis.body.position.set(0, 0, 4);
+        // this.car.chassis.body.angularVelocity.set(0, 0, 0.5);
 
         // Wheels options
         this.car.wheels = {};
@@ -75,7 +87,7 @@ export default class Physics {
 
         // Create the vehicle
         this.car.vehicle = new CANNON.RaycastVehicle({
-            chassisBody: this.car.chassisBody,
+            chassisBody: this.car.chassis.body,
         });
 
         this.options.chassisConnectionPointLocal.set(1, 1, 0);
@@ -109,7 +121,7 @@ export default class Physics {
             quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
 
             wheelBody.addShape(cylinderShape, new CANNON.Vec3(), quaternion);
-            this.this.car.wheels.bodies.push(wheelBody);
+            this.car.wheels.bodies.push(wheelBody);
             this.world.addBody(wheelBody);
         }
 
@@ -182,82 +194,71 @@ export default class Physics {
         this.car.options.maxSteerVal = 0.5;
         this.car.options.maxForce = 1000;
         this.car.options.brakeForce = 1000000;
-        function controlsHandler(event) {
+
+        const controlsHandler = (event) => {
             const up = event.type == "keyup";
 
             if (!up && event.type !== "keydown") {
                 return;
             }
 
-            this.car.vehicle.vehicle.setBrake(0, 0);
-            this.car.vehicle.vehicle.setBrake(0, 1);
-            this.car.vehicle.vehicle.setBrake(0, 2);
-            this.car.vehicle.vehicle.setBrake(0, 3);
+            this.car.vehicle.setBrake(0, 0);
+            this.car.vehicle.setBrake(0, 1);
+            this.car.vehicle.setBrake(0, 2);
+            this.car.vehicle.setBrake(0, 3);
 
             switch (event.keyCode) {
                 case 38: // forward
-                    this.car.vehicle.vehicle.applyEngineForce(
+                    this.car.vehicle.applyEngineForce(
                         up ? 0 : -this.car.options.maxForce,
                         2
                     );
-                    this.car.vehicle.vehicle.applyEngineForce(
+                    this.car.vehicle.applyEngineForce(
                         up ? 0 : -this.car.options.maxForce,
                         3
                     );
                     break;
 
                 case 40: // backward
-                    this.car.vehicle.vehicle.applyEngineForce(
+                    this.car.vehicle.applyEngineForce(
                         up ? 0 : this.car.options.maxForce,
                         2
                     );
-                    this.car.vehicle.vehicle.applyEngineForce(
+                    this.car.vehicle.applyEngineForce(
                         up ? 0 : this.car.options.maxForce,
                         3
                     );
                     break;
 
                 case 66: // b
-                    this.car.vehicle.vehicle.setBrake(
-                        this.car.options.brakeForce,
-                        0
-                    );
-                    this.car.vehicle.vehicle.setBrake(
-                        this.car.options.brakeForce,
-                        1
-                    );
-                    this.car.vehicle.vehicle.setBrake(
-                        this.car.options.brakeForce,
-                        2
-                    );
-                    this.car.vehicle.vehicle.setBrake(
-                        this.car.options.brakeForce,
-                        3
-                    );
+                    this.car.vehicle.setBrake(this.car.options.brakeForce, 0);
+                    this.car.vehicle.setBrake(this.car.options.brakeForce, 1);
+                    this.car.vehicle.setBrake(this.car.options.brakeForce, 2);
+                    this.car.vehicle.setBrake(this.car.options.brakeForce, 3);
                     break;
 
                 case 39: // right
-                    this.car.vehicle.vehicle.setSteeringValue(
+                    this.car.vehicle.setSteeringValue(
                         up ? 0 : -this.car.options.maxSteerVal,
                         0
                     );
-                    this.car.vehicle.vehicle.setSteeringValue(
+                    this.car.vehicle.setSteeringValue(
                         up ? 0 : -this.car.options.maxSteerVal,
                         1
                     );
                     break;
 
                 case 37: // left
-                    this.car.vehicle.vehicle.setSteeringValue(
+                    this.car.vehicle.setSteeringValue(
                         up ? 0 : this.car.options.maxSteerVal,
                         0
                     );
-                    this.car.vehicle.vehicle.setSteeringValue(
+                    this.car.vehicle.setSteeringValue(
                         up ? 0 : this.car.options.maxSteerVal,
                         1
                     );
                     break;
             }
-        }
+        };
     }
 }
