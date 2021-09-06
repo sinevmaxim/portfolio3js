@@ -4,24 +4,29 @@ import Car from "./Car";
 import Physics from "./Physics";
 import Camera from "./Camera";
 import Light from "./Light";
-import File from "./File";
+// import File from "./File";
+import FileEventEmmiter from "./Events/FileEventEmmiter";
 
 export default class Application {
     constructor(args) {
         this.canvas = args.canvas;
 
         this.time = new TimeEventEmmiter();
+        this.files = new FileEventEmmiter();
         this.sizes = {
             width: window.innerWidth,
             height: window.innerHeight,
         };
 
-        this.initFiles();
-        this.initRenderer();
-        this.initCamera();
-        this.initPhysics();
-        this.initCar();
-        this.initLight();
+        this.files.on("ready", () => {
+            // this.initFiles();
+            this.initRenderer();
+            this.initCamera();
+            this.initPhysics();
+            this.initCar();
+            this.initLight();
+            this.initRender();
+        });
     }
 
     initRenderer() {
@@ -51,11 +56,11 @@ export default class Application {
         });
     }
 
-    initFiles() {
-        console.info("Application - Initializing Files");
+    // initFiles() {
+    //     console.info("Application - Initializing Files");
 
-        this.files = new File();
-    }
+    //     this.files = new File();
+    // }
 
     initPhysics() {
         console.info("Application - Initializing Physics");
@@ -97,7 +102,7 @@ export default class Application {
         console.info("Application - Initialazing Render");
 
         this.time.on("tick", () => {
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.camera.cameraInstance);
         });
     }
 }
