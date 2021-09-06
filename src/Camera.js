@@ -39,9 +39,7 @@ export default class Camera {
             this.cameraInstance,
             this.renderer.domElement
         );
-        this.controls.enabled = false;
-        this.controls.enableKeys = false;
-        this.controls.zoomSpeed = 0.5;
+        this.controls.enableDamping = true;
 
         this.time.on("tick", () => {
             this.controls.update();
