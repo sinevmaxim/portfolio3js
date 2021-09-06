@@ -52,6 +52,8 @@ export default class Application {
 
         // Resize event
         window.addEventListener("resize", () => {
+            this.sizes.height = window.innerHeight;
+            this.sizes.width = window.innerWidth;
             this.renderer.setSize(this.sizes.width, this.sizes.height);
         });
     }

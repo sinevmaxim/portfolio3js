@@ -15,6 +15,7 @@ export default class TimeEventEmmiter extends EventEmmiter {
 
     tick() {
         window.requestAnimationFrame(this.tick);
+        console.log(window);
         const current = Date.now();
         this.delta = current - this.current;
         this.elapsed = current - this.start;

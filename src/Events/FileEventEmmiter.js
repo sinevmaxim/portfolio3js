@@ -31,7 +31,7 @@ export default class FileEventEmmiter extends EventEmmiter {
                 this.items[name] = gltf.scene.children[0];
             });
         });
-        console.log(this.items);
+
         console.info("Files - Loaded");
     }
 

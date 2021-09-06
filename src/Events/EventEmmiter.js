@@ -19,7 +19,7 @@ export default class EventEmmiter {
         this._event[_name] = this._event[_name] || [];
 
         const trigger = (callback) => {
-            console.log(callback);
+            // console.log(callback);
             callback();
         };
         this._event[_name].forEach(trigger);
