@@ -60,6 +60,17 @@ export default class Physics {
             new CANNON.Vec3(1, 0, 0),
             -Math.PI / 2
         );
+        this.floor.model = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(1000, 1000, 128, 128),
+            new THREE.MeshBasicMaterial({
+                wireframe: true,
+                color: 0xff0000,
+            })
+        );
+
+        this.floor.model.position.copy(this.floor.body.position);
+        this.floor.model.quaternion.copy(this.floor.body.quaternion);
+        this.object.add(this.floor.model);
 
         this.world.addBody(this.floor.body);
     }
@@ -69,11 +80,11 @@ export default class Physics {
         this.car = {};
         this.car.chassis = {};
 
-        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.5));
+        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1.25, 0.5));
         this.car.chassis.body = new CANNON.Body({ mass: 150 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
-        this.car.chassis.body.position.set(0, 0, 4);
-        // this.car.chassis.body.angularVelocity.set(0, 0, 0.5);
+        this.car.chassis.body.position.set(0, 4, 0);
+        this.car.chassis.body.angularVelocity.set(0, 0, 0);
 
         // Wheels options
         this.car.wheels = {};
@@ -111,6 +122,8 @@ export default class Physics {
         this.car.wheels.options.chassisConnectionPointLocal.set(-1, -1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
+        this.car.vehicle.addToWorld(this.world);
+
         this.car.wheels.bodies = [];
         for (const wheelInfo of this.car.vehicle.wheelInfos) {
             const cylinderShape = new CANNON.Cylinder(
@@ -129,7 +142,7 @@ export default class Physics {
             const quaternion = new CANNON.Quaternion();
             quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
 
-            wheelBody.addShape(cylinderShape, new CANNON.Vec3(), quaternion);
+            wheelBody.addShape(cylinderShape, new CANNON.Vec3());
             this.car.wheels.bodies.push(wheelBody);
             this.world.addBody(wheelBody);
         }
@@ -142,9 +155,18 @@ export default class Physics {
         });
 
         this.car.model.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(2, 1, 1),
+            new THREE.BoxBufferGeometry(2, 1.25, 0.5),
             this.car.model.material
         );
+
+        this.time.on("tick", () => {
+            this.car.model.chassis.position.copy(
+                this.car.chassis.body.position
+            );
+            this.car.model.chassis.quaternion.copy(
+                this.car.chassis.body.quaternion
+            );
+        });
 
         this.object.add(this.car.model.chassis);
 
@@ -163,8 +185,10 @@ export default class Physics {
                 wheelGeometry,
                 this.car.model.material
             );
+
             this.car.model.wheels.push(wheel);
             this.object.add(wheel);
+            console.log(this.car.model.wheels);
         }
 
         this.world.addEventListener("postStep", () => {
@@ -174,6 +198,8 @@ export default class Physics {
                 const transform = this.car.vehicle.wheelInfos[i].worldTransform;
                 this.car.wheels.bodies[i].position.copy(transform.position);
                 this.car.wheels.bodies[i].quaternion.copy(transform.quaternion);
+                this.car.model.wheels[i].quaternion.copy(transform.quaternion);
+                this.car.model.wheels[i].position.copy(transform.position);
 
                 // Rotate the wheels on the right
                 if (i === 1 || i === 3) {
@@ -196,7 +222,7 @@ export default class Physics {
         });
 
         this.car.options = {};
-        this.car.options.maxSteerVal = 0.5;
+        this.car.options.maxSteerVal = 0.3;
         this.car.options.maxForce = 1000;
         this.car.options.brakeForce = 1000000;
 
