@@ -21,7 +21,16 @@ export default class Car {
         this.models.chassis = this.files.items.carChassis;
         this.models.wheel = this.files.items.carWheel;
     }
+    
+    // alert(this.files.models);
+    // console.log(this.files.models);
 
+    // console.log(this.files.models.car);
+    // console.log(this.files.models.car.chassis);
+    // console.log(this.files.models.car.wheel);
+
+    // this.models.chassis = this.files.models.car.chassis;
+    // this.models.wheel = this.files.models.car.wheel;
     initPosition() {
         console.info("Car - Initialazing Position");
 
