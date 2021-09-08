@@ -6,6 +6,7 @@ import Camera from "./Camera";
 import Light from "./Light";
 // import File from "./File";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
+import * as dat from "dat.gui";
 
 export default class Application {
     constructor(args) {
@@ -17,6 +18,7 @@ export default class Application {
             width: window.innerWidth,
             height: window.innerHeight,
         };
+        this.debug = new dat.GUI();
 
         this.files.on("ready", () => {
             // this.initFiles();
@@ -69,6 +71,8 @@ export default class Application {
 
         this.physics = new Physics({
             time: this.time,
+            camera: this.camera,
+            debug: this.debug,
         });
         this.scene.add(this.physics.object);
     }

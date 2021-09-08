@@ -20,7 +20,7 @@ export default class FileEventEmmiter extends EventEmmiter {
         console.info("Files - Loading");
 
         this.toLoad = {
-            carChassis: "/models/car/chassis.glb",
+            carChassis: "/models/car/car.glb",
             carWheel: "/models/car/wheel.glb",
         };
 
@@ -28,7 +28,7 @@ export default class FileEventEmmiter extends EventEmmiter {
 
         Object.entries(this.toLoad).forEach(([name, url]) => {
             this.loaders.gltfLoader.load(url, (gltf) => {
-                this.items[name] = gltf.scene.children[0];
+                this.items[name] = gltf.scene;
             });
         });
 

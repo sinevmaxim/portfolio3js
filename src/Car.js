@@ -25,6 +25,7 @@ export default class Car {
     initPosition() {
         console.info("Car - Initialazing Position");
 
+        this.object.add(this.models.chassis);
         this.time.on("tick", () => {
             this.models.chassis.position.copy(
                 this.physics.car.chassis.body.position
@@ -44,18 +45,19 @@ export default class Car {
 
         for (let i = 0; i < 4; i++) {
             const object = this.models.wheel.clone();
+            object.scale.set(3, 3, 3);
             this.wheels.items.push(object);
-            this.object.add(object);
+            // this.object.add(object);
         }
 
-        this.time.on("tick", () => {
-            for (let key = 0; key < 4; key++) {
-                const wheelBody = this.physics.car.wheels.bodies[key];
-                const wheelObject = this.wheels.items[key];
+        // this.time.on("tick", () => {
+        //     for (let key = 0; key < 4; key++) {
+        //         const wheelBody = this.physics.car.wheels.bodies[key];
+        //         const wheelObject = this.wheels.items[key];
 
-                wheelObject.position.copy(wheelBody.position);
-                wheelObject.quaternion.copy(wheelBody.quaternion);
-            }
-        });
+        //         wheelObject.position.copy(wheelBody.position);
+        //         wheelObject.quaternion.copy(wheelBody.quaternion);
+        //     }
+        // });
     }
 }

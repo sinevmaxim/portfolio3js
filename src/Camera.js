@@ -8,6 +8,7 @@ export default class Camera {
         this.sizes = args.sizes;
 
         this.object = new THREE.Object3D();
+        this.orbit = true;
 
         this.initCamera();
         this.initControls();
@@ -20,10 +21,12 @@ export default class Camera {
             40,
             this.sizes.width / this.sizes.height,
             1,
-            80
+            1000
         );
-        this.cameraInstance.position.set(2, 2, 2);
+
+        this.cameraInstance.position.set(20, 20, 20);
         this.cameraInstance.lookAt(new THREE.Vector3());
+
         this.object.add(this.cameraInstance);
 
         window.addEventListener("resize", () => {

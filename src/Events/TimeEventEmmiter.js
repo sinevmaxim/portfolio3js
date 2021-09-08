@@ -21,6 +21,9 @@ export default class TimeEventEmmiter extends EventEmmiter {
         this.elapsed = current - this.start;
         this.current = current;
 
+        if (this.delta > 60) {
+            this.delta = 60;
+        }
         this.emit("tick");
     }
 }

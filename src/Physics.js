@@ -4,6 +4,9 @@ import * as CANNON from "cannon";
 export default class Physics {
     constructor(args) {
         this.time = args.time;
+        this.camera = args.camera;
+        this.debug = args.debug;
+
         this.object = new THREE.Object3D();
 
         this.initWorld();
@@ -21,8 +24,8 @@ export default class Physics {
 
         this.world = new CANNON.World();
         this.world.broadphase = new CANNON.SAPBroadphase(this.world);
-        this.world.allowSleep = true;
-        this.world.gravity.set(0, -9.81, 0);
+        this.world.gravity.set(0, 0, -10);
+        this.world.defaultContactMaterial.friction = 0;
     }
 
     initMaterial() {
@@ -37,8 +40,9 @@ export default class Physics {
                 this.materials.defaultMaterial,
                 this.materials.defaultMaterial,
                 {
-                    friction: 0.24,
-                    restitution: 0.7,
+                    friction: 0.3,
+                    restitution: 0.0,
+                    contactEquationStiffness: 1000,
                 }
             );
 
@@ -51,20 +55,18 @@ export default class Physics {
 
     initFloor() {
         console.info("Physics - Initialazing Floor");
+
         this.floor = {};
         this.floor.body = new CANNON.Body({
             shape: new CANNON.Plane(),
             mass: 0,
         });
-        this.floor.body.quaternion.setFromAxisAngle(
-            new CANNON.Vec3(1, 0, 0),
-            -Math.PI / 2
-        );
+
         this.floor.model = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(1000, 1000, 128, 128),
             new THREE.MeshBasicMaterial({
                 wireframe: true,
-                color: 0xff0000,
+                color: 0xffffff,
             })
         );
 
@@ -80,27 +82,35 @@ export default class Physics {
         this.car = {};
         this.car.chassis = {};
 
-        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1.25, 0.5));
-        this.car.chassis.body = new CANNON.Body({ mass: 150 });
+        this.offsetX = 0;
+        this.offsetY = 34;
+        this.offsetZ = 21;
+
+        // this.debug.add(this, "offsetX", -100, 100, 0.1);
+        // this.debug.add(this, "offsetY", -100, 100, 0.1);
+        // this.debug.add(this, "offsetZ", -100, 100, 0.1);
+
+        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.75));
+        this.car.chassis.body = new CANNON.Body({ mass: 200 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
-        this.car.chassis.body.position.set(0, 4, 0);
-        this.car.chassis.body.angularVelocity.set(0, 0, 0);
+        this.car.chassis.body.position.set(0, 0, 4);
+        // this.car.chassis.body.angularVelocity.set(-1.5, 0.0, 1.5);
 
         // Wheels options
         this.car.wheels = {};
         this.car.wheels.options = {
             radius: 0.5,
             directionLocal: new CANNON.Vec3(0, 0, -1),
-            suspensionStiffness: 30,
-            suspensionRestLength: 0.3,
+            suspensionStiffness: 45,
+            suspensionRestLength: 0.4,
             frictionSlip: 5,
-            dampingRelaxation: 2.3,
-            dampingCompression: 4.4,
+            dampingRelaxation: 2.8,
+            dampingCompression: 4.5,
             maxSuspensionForce: 100000,
             rollInfluence: 0.01,
             axleLocal: new CANNON.Vec3(0, 1, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
-            maxSuspensionTravel: 0.3,
+            maxSuspensionTravel: 0.1,
             customSlidingRotationalSpeed: -30,
             useCustomSlidingRotationalSpeed: true,
         };
@@ -110,16 +120,16 @@ export default class Physics {
             chassisBody: this.car.chassis.body,
         });
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(1, 1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(1.25, 1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(1, -1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(1.25, -1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(-1, 1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(-1.25, 1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(-1, -1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(-1.25, -1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
         this.car.vehicle.addToWorld(this.world);
@@ -129,7 +139,7 @@ export default class Physics {
             const cylinderShape = new CANNON.Cylinder(
                 wheelInfo.radius,
                 wheelInfo.radius,
-                wheelInfo.radius / 2,
+                wheelInfo.radius,
                 20
             );
 
@@ -142,7 +152,7 @@ export default class Physics {
             const quaternion = new CANNON.Quaternion();
             quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
 
-            wheelBody.addShape(cylinderShape, new CANNON.Vec3());
+            wheelBody.addShape(cylinderShape, new CANNON.Vec3()), quaternion;
             this.car.wheels.bodies.push(wheelBody);
             this.world.addBody(wheelBody);
         }
@@ -155,18 +165,9 @@ export default class Physics {
         });
 
         this.car.model.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(2, 1.25, 0.5),
+            new THREE.BoxBufferGeometry(2, 0.5, 0.5),
             this.car.model.material
         );
-
-        this.time.on("tick", () => {
-            this.car.model.chassis.position.copy(
-                this.car.chassis.body.position
-            );
-            this.car.model.chassis.quaternion.copy(
-                this.car.chassis.body.quaternion
-            );
-        });
 
         this.object.add(this.car.model.chassis);
 
@@ -175,7 +176,7 @@ export default class Physics {
         const wheelGeometry = new THREE.CylinderBufferGeometry(
             this.car.wheels.options.radius,
             this.car.wheels.options.radius,
-            this.car.wheels.options.radius / 2,
+            this.car.wheels.options.radius,
             8,
             1
         );
@@ -188,7 +189,6 @@ export default class Physics {
 
             this.car.model.wheels.push(wheel);
             this.object.add(wheel);
-            console.log(this.car.model.wheels);
         }
 
         this.world.addEventListener("postStep", () => {
@@ -219,12 +219,31 @@ export default class Physics {
                         );
                 }
             }
+
+            this.car.model.chassis.position.copy(
+                this.car.chassis.body.position
+            );
+
+            if (this.camera.orbit) {
+                this.camera.cameraInstance.position.set(
+                    this.car.model.chassis.position.x - this.offsetX,
+                    this.car.model.chassis.position.y - this.offsetY,
+                    this.car.model.chassis.position.z + this.offsetZ
+                );
+
+                this.camera.cameraInstance.lookAt(
+                    this.car.model.chassis.position
+                );
+            }
+            this.car.model.chassis.quaternion.copy(
+                this.car.chassis.body.quaternion
+            );
         });
 
         this.car.options = {};
         this.car.options.maxSteerVal = 0.3;
-        this.car.options.maxForce = 1000;
-        this.car.options.brakeForce = 1000000;
+        this.car.options.maxForce = 500;
+        this.car.options.brakeForce = 100000;
 
         const controlsHandler = (event) => {
             const up = event.type == "keyup";
