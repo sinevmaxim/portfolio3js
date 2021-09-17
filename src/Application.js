@@ -23,10 +23,11 @@ export default class Application {
         this.files.on("ready", () => {
             // this.initFiles();
             this.initRenderer();
+            this.initLight();
             this.initCamera();
             this.initPhysics();
             this.initCar();
-            this.initLight();
+            // this.initEffects();
             this.initRender();
         });
     }
@@ -48,6 +49,8 @@ export default class Application {
         this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         this.renderer.physicallyCorrectLights = true;
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         // this.renderer.gammaFactor = 2.2;
         // this.renderer.gammaOutPut = true;
         // this.renderer.autoClear = false;
@@ -73,6 +76,8 @@ export default class Application {
             time: this.time,
             camera: this.camera,
             debug: this.debug,
+            files: this.files,
+            light: this.light,
         });
         this.scene.add(this.physics.object);
     }
@@ -87,6 +92,35 @@ export default class Application {
         });
         this.scene.add(this.car.object);
     }
+
+    // initEffects() {
+    //     let renderTarget = null;
+
+    //     if (renderer.getPixelRatio() === 1 && renderer.capabilities.isWebGL2) {
+    //         renderTarget = new THREE.WebGLMultisampleRenderTarget(800, 600, {
+    //             minFilter: THREE.LinearFilter,
+    //             magFilter: THREE.LinearFilter,
+    //             format: THREE.RGBAFormat,
+    //             encoding: THREE.sRGBEncoding,
+    //         });
+    //     } else {
+    //         renderTarget = new THREE.WebGLRenderTarget(800, 600, {
+    //             minFilter: THREE.LinearFilter,
+    //             magFilter: THREE.LinearFilter,
+    //             format: THREE.RGBAFormat,
+    //             encoding: THREE.sRGBEncoding,
+    //         });
+    //     }
+    //     //Composer
+    //     this.effectComposer = new EffectComposer(this.renderer, renderTarget);
+
+    //     this.effectComposer.setSize(sizes.width, sizes.height);
+    //     this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    //     //Passes
+    //     const renderPass = new RenderPass(this.scene, this.camera);
+    //     this.effectComposer.addPass(renderPass);
+    // }
 
     initCamera() {
         console.info("Application - Initializing Camera");

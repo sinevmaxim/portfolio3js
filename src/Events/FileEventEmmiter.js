@@ -20,19 +20,26 @@ export default class FileEventEmmiter extends EventEmmiter {
         console.info("Files - Loading");
 
         this.toLoad = {
-            carChassis: "/models/car/car.glb",
-            carWheel: "/models/car/wheel.glb",
+            carChassis: { url: "/models/car/car.glb", type: "model" },
+            carWheel: { url: "/models/car/wheel.glb", type: "model" },
+            floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
+            // carShadow: { url: "/textures/car/carShadow.jpg", type: "texture" },
         };
 
         this.loaders.gltfLoader = new GLTFLoader(this.manager);
+        this.loaders.textureLoader = new THREE.TextureLoader(this.manager);
 
-        Object.entries(this.toLoad).forEach(([name, url]) => {
-            this.loaders.gltfLoader.load(url, (gltf) => {
-                this.items[name] = gltf.scene;
-            });
+        Object.entries(this.toLoad).forEach(([name, data]) => {
+            if (data.type == "model") {
+                this.loaders.gltfLoader.load(data.url, (gltf) => {
+                    this.items[name] = gltf.scene;
+                });
+            }
+
+            if (data.type == "texture") {
+                this.items[name] = this.loaders.textureLoader.load(data.url);
+            }
         });
-
-        console.info("Files - Loaded");
     }
 
     ready() {

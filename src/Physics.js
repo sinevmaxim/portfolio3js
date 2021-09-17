@@ -6,6 +6,8 @@ export default class Physics {
         this.time = args.time;
         this.camera = args.camera;
         this.debug = args.debug;
+        this.files = args.files;
+        this.light = args.light;
 
         this.object = new THREE.Object3D();
 
@@ -63,12 +65,15 @@ export default class Physics {
         });
 
         this.floor.model = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(1000, 1000, 128, 128),
-            new THREE.MeshBasicMaterial({
-                wireframe: true,
-                color: 0xffffff,
+            new THREE.PlaneBufferGeometry(170, 170, 64, 64),
+            new THREE.MeshStandardMaterial({
+                map: this.files.items.floorTexture,
+                // color: 0x330033,
+                // wireframe: true,
             })
         );
+
+        this.floor.model.receiveShadow = true;
 
         this.floor.model.position.copy(this.floor.body.position);
         this.floor.model.quaternion.copy(this.floor.body.quaternion);
@@ -91,7 +96,7 @@ export default class Physics {
         // this.debug.add(this, "offsetZ", -100, 100, 0.1);
 
         this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.75));
-        this.car.chassis.body = new CANNON.Body({ mass: 200 });
+        this.car.chassis.body = new CANNON.Body({ mass: 565 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
         this.car.chassis.body.position.set(0, 0, 4);
         // this.car.chassis.body.angularVelocity.set(-1.5, 0.0, 1.5);
@@ -161,13 +166,14 @@ export default class Physics {
 
         this.car.model.material = new THREE.MeshBasicMaterial({
             color: 0xffffff,
-            wireframe: true,
+            // wireframe: true,
         });
 
         this.car.model.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(2, 0.5, 0.5),
+            new THREE.BoxBufferGeometry(2, 2, 0.5),
             this.car.model.material
         );
+        this.car.model.chassis.castShadow = true;
 
         this.object.add(this.car.model.chassis);
 
@@ -187,10 +193,17 @@ export default class Physics {
                 this.car.model.material
             );
 
+            wheel.castShadow = true;
+
             this.car.model.wheels.push(wheel);
             this.object.add(wheel);
         }
 
+        this.light.light.directionalLight.target.position.copy(
+            this.car.model.chassis.position
+        );
+
+        this.object.add(this.light.light.directionalLight.target);
         this.world.addEventListener("postStep", () => {
             for (let i = 0; i < this.car.vehicle.wheelInfos.length; i++) {
                 this.car.vehicle.updateWheelTransform(i);
@@ -224,6 +237,10 @@ export default class Physics {
                 this.car.chassis.body.position
             );
 
+            this.light.light.directionalLight.target.position.copy(
+                this.car.model.chassis.position
+            );
+
             if (this.camera.orbit) {
                 this.camera.cameraInstance.position.set(
                     this.car.model.chassis.position.x - this.offsetX,
@@ -235,9 +252,14 @@ export default class Physics {
                     this.car.model.chassis.position
                 );
             }
+            this.floor.model.position.x = this.car.model.chassis.position.x;
+            this.floor.model.position.y = this.car.model.chassis.position.y;
             this.car.model.chassis.quaternion.copy(
                 this.car.chassis.body.quaternion
             );
+
+            // console.log(this.car.vehicle.currentVehicleSpeedKmHour);
+            // console.log(this.car.model.chassis.position);
         });
 
         this.car.options = {};
