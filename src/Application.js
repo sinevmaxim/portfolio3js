@@ -4,6 +4,7 @@ import Car from "./Car";
 import Physics from "./Physics";
 import Camera from "./Camera";
 import Light from "./Light";
+import Sound from "./Sound";
 // import File from "./File";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
 import * as dat from "dat.gui";
@@ -19,6 +20,7 @@ export default class Application {
             height: window.innerHeight,
         };
         this.debug = new dat.GUI();
+        this.sound = new Sound();
 
         this.files.on("ready", () => {
             // this.initFiles();
@@ -89,6 +91,7 @@ export default class Application {
             time: this.time,
             physics: this.physics,
             files: this.files,
+            sound: this.sound,
         });
         this.scene.add(this.car.object);
     }

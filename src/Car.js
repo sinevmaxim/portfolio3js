@@ -5,12 +5,15 @@ export default class Car {
         this.physics = args.physics;
         this.time = args.time;
         this.files = args.files;
+        this.sound = args.sound;
 
         this.object = new THREE.Object3D();
+        this.speed = 0;
 
         this.initModels();
         this.initWheels();
         this.initPosition();
+        this.initSound();
     }
 
     initModels() {
@@ -34,6 +37,20 @@ export default class Car {
             this.models.chassis.quaternion.copy(
                 this.physics.car.chassis.body.quaternion
             );
+
+            this.speed = this.physics.car.vehicle.currentVehicleSpeedKmHour;
+
+            if (this.speed >= 150) {
+                this.physics.car.options.maxForceMultiplier =
+                    ((200 - this.speed) * 2.2) / 200;
+            }
+
+            if (this.speed > 0) {
+                this.physics.car.options.maxForceMultiplierBack = 3;
+            } else {
+                this.physics.car.options.maxForceMultiplierBack =
+                    (30 - Math.abs(this.speed)) / 30;
+            }
         });
     }
 
@@ -59,5 +76,23 @@ export default class Car {
         //         wheelObject.quaternion.copy(wheelBody.quaternion);
         //     }
         // });
+    }
+
+    initSound() {
+        this.sound.car.engineHigh.play();
+        this.sound.car.engine.play();
+
+        this.time.on("tick", () => {
+            this.sound.car.engine.volume(
+                Math.max(0, 0.02 * ((40 - Math.abs(this.speed)) / 40))
+            );
+            this.sound.car.engineHigh.rate(
+                Math.min(1.2, Math.max(0.2, Math.abs(this.speed) / 80))
+            );
+            this.sound.car.engineHigh.volume(
+                0.2
+                // Math.min(0.2, 0.1 * ((Math.abs(this.speed) - 10) / 20))
+            );
+        });
     }
 }

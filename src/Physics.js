@@ -8,6 +8,7 @@ export default class Physics {
         this.debug = args.debug;
         this.files = args.files;
         this.light = args.light;
+        this.controls = args.controls;
 
         this.object = new THREE.Object3D();
 
@@ -68,6 +69,7 @@ export default class Physics {
             new THREE.PlaneBufferGeometry(170, 170, 64, 64),
             new THREE.MeshStandardMaterial({
                 map: this.files.items.floorTexture,
+                roughness: 1,
                 // color: 0x330033,
                 // wireframe: true,
             })
@@ -199,9 +201,9 @@ export default class Physics {
             this.object.add(wheel);
         }
 
-        this.light.light.directionalLight.target.position.copy(
-            this.car.model.chassis.position
-        );
+        // this.light.light.directionalLight.target.position.copy(
+        //     this.car.model.chassis.position
+        // );
 
         this.object.add(this.light.light.directionalLight.target);
         this.world.addEventListener("postStep", () => {
@@ -237,9 +239,9 @@ export default class Physics {
                 this.car.chassis.body.position
             );
 
-            this.light.light.directionalLight.target.position.copy(
-                this.car.model.chassis.position
-            );
+            // this.light.light.directionalLight.target.position.copy(
+            //     this.car.model.chassis.position
+            // );
 
             if (this.camera.orbit) {
                 this.camera.cameraInstance.position.set(
@@ -257,14 +259,13 @@ export default class Physics {
             this.car.model.chassis.quaternion.copy(
                 this.car.chassis.body.quaternion
             );
-
-            // console.log(this.car.vehicle.currentVehicleSpeedKmHour);
-            // console.log(this.car.model.chassis.position);
         });
 
         this.car.options = {};
         this.car.options.maxSteerVal = 0.3;
         this.car.options.maxForce = 500;
+        this.car.options.maxForceMultiplier = 1;
+        this.car.options.maxForceMultiplierBack = 1;
         this.car.options.brakeForce = 100000;
 
         const controlsHandler = (event) => {
@@ -282,22 +283,34 @@ export default class Physics {
             switch (event.keyCode) {
                 case 38: // forward
                     this.car.vehicle.applyEngineForce(
-                        up ? 0 : -this.car.options.maxForce,
+                        up
+                            ? 0
+                            : -this.car.options.maxForce *
+                                  this.car.options.maxForceMultiplier,
                         2
                     );
                     this.car.vehicle.applyEngineForce(
-                        up ? 0 : -this.car.options.maxForce,
+                        up
+                            ? 0
+                            : -this.car.options.maxForce *
+                                  this.car.options.maxForceMultiplier,
                         3
                     );
                     break;
 
                 case 40: // backward
                     this.car.vehicle.applyEngineForce(
-                        up ? 0 : this.car.options.maxForce,
+                        up
+                            ? 0
+                            : this.car.options.maxForce *
+                                  this.car.options.maxForceMultiplierBack,
                         2
                     );
                     this.car.vehicle.applyEngineForce(
-                        up ? 0 : this.car.options.maxForce,
+                        up
+                            ? 0
+                            : this.car.options.maxForce *
+                                  this.car.options.maxForceMultiplierBack,
                         3
                     );
                     break;
