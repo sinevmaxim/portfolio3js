@@ -23,7 +23,10 @@ export default class FileEventEmmiter extends EventEmmiter {
             carChassis: { url: "/models/car/car.glb", type: "model" },
             carWheel: { url: "/models/car/wheel.glb", type: "model" },
             floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
-            // carShadow: { url: "/textures/car/carShadow.jpg", type: "texture" },
+            carShadowTexture: {
+                url: "/textures/car/carShadowTexture.jpg",
+                type: "texture",
+            },
         };
 
         this.loaders.gltfLoader = new GLTFLoader(this.manager);

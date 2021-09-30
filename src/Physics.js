@@ -43,7 +43,7 @@ export default class Physics {
                 this.materials.defaultMaterial,
                 this.materials.defaultMaterial,
                 {
-                    friction: 0.3,
+                    friction: 0.97,
                     restitution: 0.0,
                     contactEquationStiffness: 1000,
                 }
@@ -66,10 +66,11 @@ export default class Physics {
         });
 
         this.floor.model = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(170, 170, 64, 64),
+            new THREE.PlaneBufferGeometry(170, 170, 32, 32),
             new THREE.MeshStandardMaterial({
                 map: this.files.items.floorTexture,
-                roughness: 1,
+                // metalness: 0.4,
+                // roughness: 0.8,
                 // color: 0x330033,
                 // wireframe: true,
             })
@@ -100,7 +101,7 @@ export default class Physics {
         this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.75));
         this.car.chassis.body = new CANNON.Body({ mass: 565 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
-        this.car.chassis.body.position.set(0, 0, 4);
+        this.car.chassis.body.position.set(0, 0, 2);
         // this.car.chassis.body.angularVelocity.set(-1.5, 0.0, 1.5);
 
         // Wheels options

@@ -5,7 +5,7 @@ import Physics from "./Physics";
 import Camera from "./Camera";
 import Light from "./Light";
 import Sound from "./Sound";
-// import File from "./File";
+import AreasInitializer from "./Areas/AreasInitializer";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
 import * as dat from "dat.gui";
 
@@ -23,12 +23,12 @@ export default class Application {
         this.sound = new Sound();
 
         this.files.on("ready", () => {
-            // this.initFiles();
             this.initRenderer();
             this.initLight();
             this.initCamera();
             this.initPhysics();
             this.initCar();
+            this.initAreas();
             // this.initEffects();
             this.initRender();
         });
@@ -50,9 +50,9 @@ export default class Application {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
-        this.renderer.physicallyCorrectLights = true;
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        // this.renderer.physicallyCorrectLights = true;
+        // this.renderer.shadowMap.enabled = true;
+        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         // this.renderer.gammaFactor = 2.2;
         // this.renderer.gammaOutPut = true;
         // this.renderer.autoClear = false;
@@ -64,12 +64,6 @@ export default class Application {
             this.renderer.setSize(this.sizes.width, this.sizes.height);
         });
     }
-
-    // initFiles() {
-    //     console.info("Application - Initializing Files");
-
-    //     this.files = new File();
-    // }
 
     initPhysics() {
         console.info("Application - Initializing Physics");
@@ -146,6 +140,14 @@ export default class Application {
 
         this.time.on("tick", () => {
             this.renderer.render(this.scene, this.camera.cameraInstance);
+        });
+    }
+
+    initAreas() {
+        this.areasInitializer = new AreasInitializer({
+            time: this.time,
+            files: this.files,
+            car: this.car,
         });
     }
 }
