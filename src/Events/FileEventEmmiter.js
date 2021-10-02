@@ -20,7 +20,7 @@ export default class FileEventEmmiter extends EventEmmiter {
         console.info("Files - Loading");
 
         this.toLoad = {
-            carChassis: { url: "/models/car/car.glb", type: "model" },
+            carChassis: { url: "/models/car/countach.glb", type: "model" },
             carWheel: { url: "/models/car/wheel.glb", type: "model" },
             floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
             carShadowTexture: {
