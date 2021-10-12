@@ -8,6 +8,7 @@ import Sound from "./Sound";
 import AreasInitializer from "./Areas/AreasInitializer";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
 import * as dat from "dat.gui";
+import Effects from "./Effects";
 
 export default class Application {
     constructor(args) {
@@ -29,7 +30,7 @@ export default class Application {
             this.initPhysics();
             this.initCar();
             this.initAreas();
-            // this.initEffects();
+            this.initEffects();
             this.initRender();
         });
     }
@@ -48,7 +49,7 @@ export default class Application {
         // this.renderer.setClearColor(0x414141, 1)
         this.renderer.setClearColor(0x000000, 1);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.setPixelRatio(2);
+        // this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         // this.renderer.physicallyCorrectLights = true;
         // this.renderer.shadowMap.enabled = true;
@@ -86,38 +87,10 @@ export default class Application {
             physics: this.physics,
             files: this.files,
             sound: this.sound,
+            light: this.light,
         });
         this.scene.add(this.car.object);
     }
-
-    // initEffects() {
-    //     let renderTarget = null;
-
-    //     if (renderer.getPixelRatio() === 1 && renderer.capabilities.isWebGL2) {
-    //         renderTarget = new THREE.WebGLMultisampleRenderTarget(800, 600, {
-    //             minFilter: THREE.LinearFilter,
-    //             magFilter: THREE.LinearFilter,
-    //             format: THREE.RGBAFormat,
-    //             encoding: THREE.sRGBEncoding,
-    //         });
-    //     } else {
-    //         renderTarget = new THREE.WebGLRenderTarget(800, 600, {
-    //             minFilter: THREE.LinearFilter,
-    //             magFilter: THREE.LinearFilter,
-    //             format: THREE.RGBAFormat,
-    //             encoding: THREE.sRGBEncoding,
-    //         });
-    //     }
-    //     //Composer
-    //     this.effectComposer = new EffectComposer(this.renderer, renderTarget);
-
-    //     this.effectComposer.setSize(sizes.width, sizes.height);
-    //     this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    //     //Passes
-    //     const renderPass = new RenderPass(this.scene, this.camera);
-    //     this.effectComposer.addPass(renderPass);
-    // }
 
     initCamera() {
         console.info("Application - Initializing Camera");
@@ -137,10 +110,19 @@ export default class Application {
 
     initRender() {
         console.info("Application - Initialazing Render");
-
         this.time.on("tick", () => {
             this.renderer.render(this.scene, this.camera.cameraInstance);
         });
+    }
+
+    initEffects() {
+        // this.effects = new Effects({
+        //     time: this.time,
+        //     camera: this.camera,
+        //     sizes: this.sizes,
+        //     renderer: this.renderer,
+        //     scene: this.scene,
+        // });
     }
 
     initAreas() {

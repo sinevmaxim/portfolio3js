@@ -13,34 +13,34 @@ export default class Light {
         console.info("Light - Initializing");
         this.light.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.light.directionalLight = new THREE.DirectionalLight(0xfd00e1, 4);
-        this.light.pointLight = new THREE.PointLight(0xffffff, 10, 20);
         this.light.directionalLight.position.set(16, 106, 30);
-        this.light.pointLight.position.set(1, 2, 3);
-        this.object.add(
-            this.light.ambientLight,
-            this.light.directionalLight,
-            this.light.pointLight
+
+        this.light.rightSpotLight = new THREE.SpotLight(
+            0xfdfadd,
+            50,
+            10,
+            Math.PI * 0.1,
+            0.1,
+            2
+        );
+        this.light.leftSpotLight = new THREE.SpotLight(
+            0xfdfadd,
+            50,
+            10,
+            Math.PI * 0.1,
+            0.1,
+            2
         );
 
-        // this.light.directionalLight.shadow.mapSize.width = 512;
-        // this.light.directionalLight.shadow.mapSize.height = 512;
-        // this.light.directionalLight.shadow.camera.near = 23;
-        // this.light.directionalLight.shadow.camera.far = 1500;
-        // this.light.directionalLight.shadow.mapSize.height = 100;
-        // this.light.directionalLight.castShadow = true;
-
-        // this.helper.dlShadow = new THREE.CameraHelper(
-        //     this.light.directionalLight.shadow.camera
-        // );
-        // this.object.add(this.helper.dlShadow);
-
-        // console.log(this.light.directionalLight.shadow.camera.position);
-
-        // this.helper.directionalLight = new THREE.DirectionalLightHelper(
-        //     this.light.directionalLight,
-        //     5
-        // );
-
-        // this.object.add(this.helper.directionalLight);
+        this.helper.spotLightHelper = new THREE.SpotLightHelper(
+            this.light.leftSpotLight,
+            0.2
+        );
+        this.object.add(
+            this.light.leftSpotLight,
+            this.light.rightSpotLight,
+            this.light.ambientLight,
+            this.light.directionalLight
+        );
     }
 }

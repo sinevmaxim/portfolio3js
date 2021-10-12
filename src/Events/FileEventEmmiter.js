@@ -7,6 +7,7 @@ export default class FileEventEmmiter extends EventEmmiter {
         super();
         this.loaders = {};
         this.items = {};
+        this.animations = {};
 
         this.manager = new THREE.LoadingManager();
         this.manager.onLoad = () => this.ready();
@@ -20,7 +21,10 @@ export default class FileEventEmmiter extends EventEmmiter {
         console.info("Files - Loading");
 
         this.toLoad = {
-            carChassis: { url: "/models/car/countach.glb", type: "model" },
+            carChassis: {
+                url: "/models/car/countach.glb",
+                type: "model",
+            },
             carWheel: { url: "/models/car/wheel.glb", type: "model" },
             floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
             carShadowTexture: {
@@ -36,6 +40,9 @@ export default class FileEventEmmiter extends EventEmmiter {
             if (data.type == "model") {
                 this.loaders.gltfLoader.load(data.url, (gltf) => {
                     this.items[name] = gltf.scene;
+                    if (gltf.animations.length != 0) {
+                        this.animations[name] = gltf.animations;
+                    }
                 });
             }
 

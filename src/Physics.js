@@ -43,7 +43,7 @@ export default class Physics {
                 this.materials.defaultMaterial,
                 this.materials.defaultMaterial,
                 {
-                    friction: 0.97,
+                    friction: 1,
                     restitution: 0.0,
                     contactEquationStiffness: 1000,
                 }
@@ -98,7 +98,7 @@ export default class Physics {
         // this.debug.add(this, "offsetY", -100, 100, 0.1);
         // this.debug.add(this, "offsetZ", -100, 100, 0.1);
 
-        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.75));
+        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.25));
         this.car.chassis.body = new CANNON.Body({ mass: 565 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
         this.car.chassis.body.position.set(0, 0, 2);
@@ -107,7 +107,7 @@ export default class Physics {
         // Wheels options
         this.car.wheels = {};
         this.car.wheels.options = {
-            radius: 0.5,
+            radius: 0.32,
             directionLocal: new CANNON.Vec3(0, 0, -1),
             suspensionStiffness: 45,
             suspensionRestLength: 0.4,
@@ -128,16 +128,16 @@ export default class Physics {
             chassisBody: this.car.chassis.body,
         });
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(1.25, 1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(1.9, 1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(1.25, -1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(1.9, -1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(-1.25, 1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(-1.4, 1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
-        this.car.wheels.options.chassisConnectionPointLocal.set(-1.25, -1, 0);
+        this.car.wheels.options.chassisConnectionPointLocal.set(-1.4, -1, 0);
         this.car.vehicle.addWheel(this.car.wheels.options);
 
         this.car.vehicle.addToWorld(this.world);
@@ -169,7 +169,7 @@ export default class Physics {
 
         this.car.model.material = new THREE.MeshBasicMaterial({
             color: 0xffffff,
-            // wireframe: true,
+            wireframe: true,
         });
 
         this.car.model.chassis = new THREE.Mesh(
@@ -316,12 +316,12 @@ export default class Physics {
                     );
                     break;
 
-                case 66: // b
-                    this.car.vehicle.setBrake(this.car.options.brakeForce, 0);
-                    this.car.vehicle.setBrake(this.car.options.brakeForce, 1);
-                    this.car.vehicle.setBrake(this.car.options.brakeForce, 2);
-                    this.car.vehicle.setBrake(this.car.options.brakeForce, 3);
-                    break;
+                // case 66: // b
+                //     this.car.vehicle.setBrake(this.car.options.brakeForce, 0);
+                //     this.car.vehicle.setBrake(this.car.options.brakeForce, 1);
+                //     this.car.vehicle.setBrake(this.car.options.brakeForce, 2);
+                //     this.car.vehicle.setBrake(this.car.options.brakeForce, 3);
+                //     break;
 
                 case 39: // right
                     this.car.vehicle.setSteeringValue(

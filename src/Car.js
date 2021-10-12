@@ -6,6 +6,7 @@ export default class Car {
         this.time = args.time;
         this.files = args.files;
         this.sound = args.sound;
+        this.light = args.light;
 
         this.object = new THREE.Object3D();
         this.speed = 0;
@@ -15,6 +16,8 @@ export default class Car {
         this.initPosition();
         this.initSound();
         this.initShadow();
+        this.initLights();
+        this.initAnimation();
     }
 
     initModels() {
@@ -23,6 +26,7 @@ export default class Car {
         this.models = {};
 
         this.models.chassis = this.files.items.carChassis;
+        this.models.chassis.scale.set(2, 2, 2);
         this.models.wheel = this.files.items.carWheel;
     }
 
@@ -44,7 +48,7 @@ export default class Car {
             if (this.speed >= 40) {
                 this.physics.car.options.maxForceMultiplier = Math.max(
                     0,
-                    ((120 - this.speed) * 2.2) / 120
+                    ((110 - this.speed) * 2.2) / 110
                 );
             }
 
@@ -91,7 +95,7 @@ export default class Car {
             );
             this.sound.car.engine.rate(2);
             this.sound.car.engineHigh.rate(
-                Math.min(1.5, Math.max(0.18, Math.abs(this.speed) / 90))
+                Math.min(1.6, Math.max(0.18, Math.abs(this.speed) / 90))
             );
             this.sound.car.engineHigh.volume(
                 0.2
@@ -104,7 +108,9 @@ export default class Car {
         this.shadow = this.files.items.carShadowTexture;
         this.shadowPlane = new THREE.PlaneBufferGeometry(10, 10, 1, 1);
         this.shadowMaterial = new THREE.MeshBasicMaterial({
-            map: this.shadow,
+            alphaMap: this.shadow,
+            transparent: true,
+            color: 0x000000,
         });
         this.shadowObject = new THREE.Mesh(
             this.shadowPlane,
@@ -112,18 +118,61 @@ export default class Car {
         );
 
         this.shadowObject.position.set(1, 1, 1);
+        this.shadowObject.scale.set(0.75, 0.5, 1);
         this.object.add(this.shadowObject);
 
         this.time.on("tick", () => {
             this.shadowObject.position.set(
                 this.physics.car.chassis.body.position.x,
-                this.physics.car.chassis.body.position.y,
-                this.physics.car.chassis.body.position.z - 0.8
+                this.physics.car.chassis.body.position.y + 0.2,
+                0.04
             );
 
             this.shadowObject.quaternion.copy(
                 this.physics.car.chassis.body.quaternion
             );
+        });
+    }
+
+    initAnimation() {
+        this.models.animation = {};
+
+        this.animationMixer = new THREE.AnimationMixer(
+            this.files.items.carChassis
+        );
+        this.models.animation.popUpLights = this.animationMixer.clipAction(
+            this.files.animations.carChassis[0]
+        );
+        this.models.animation.popUpLights.clampWhenFinished = true;
+        this.models.animation.popUpLights.enabled = true;
+        this.models.animation.popUpLights.loop = THREE.LoopOnce;
+
+        document.addEventListener("keydown", (event) => {
+            if (event.keyCode == 32) {
+                this.models.animation.popUpLights.play();
+            }
+        });
+
+        this.time.on("tick", () => {
+            this.animationMixer.update(this.time.delta / 1000);
+        });
+    }
+
+    initLights() {
+        this.light.light.leftSpotLight.position.set(0.5, 0.3, 0);
+        this.light.light.leftSpotLight.target.position.set(2, 0.4, 0);
+        this.light.light.rightSpotLight.position.set(0.5, -0.3, 0);
+        this.light.light.rightSpotLight.target.position.set(2, -0.4, 0);
+        this.models.chassis.add(this.light.light.leftSpotLight);
+        this.models.chassis.add(this.light.light.leftSpotLight.target);
+        this.models.chassis.add(this.light.light.rightSpotLight);
+        this.models.chassis.add(this.light.light.rightSpotLight.target);
+
+        document.addEventListener("keydown", (event) => {
+            if (event.keyCode == 32) {
+                this.light.light.leftSpotLight.visible = false;
+                this.light.light.rightSpotLight.visible = false;
+            }
         });
     }
 }
