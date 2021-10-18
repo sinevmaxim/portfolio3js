@@ -12,21 +12,21 @@ export default class Light {
     initLights() {
         console.info("Light - Initializing");
         this.light.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        this.light.directionalLight = new THREE.DirectionalLight(0xfd00e1, 4);
+        this.light.directionalLight = new THREE.DirectionalLight(0xfd00e1, 1);
         this.light.directionalLight.position.set(16, 106, 30);
 
         this.light.rightSpotLight = new THREE.SpotLight(
             0xfdfadd,
-            50,
-            10,
+            30,
+            17,
             Math.PI * 0.1,
             0.1,
             2
         );
         this.light.leftSpotLight = new THREE.SpotLight(
             0xfdfadd,
-            50,
-            10,
+            30,
+            17,
             Math.PI * 0.1,
             0.1,
             2

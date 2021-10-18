@@ -5,10 +5,12 @@ import Physics from "./Physics";
 import Camera from "./Camera";
 import Light from "./Light";
 import Sound from "./Sound";
-import AreasInitializer from "./Areas/AreasInitializer";
+import AreaGenerator from "./Areas/AreaGenerator";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
 import * as dat from "dat.gui";
 import Effects from "./Effects";
+import HouseGenerator from "./HouseGenerator";
+import PalmTreeGenerator from "./PalmTreeGenerator";
 
 export default class Application {
     constructor(args) {
@@ -32,6 +34,8 @@ export default class Application {
             this.initAreas();
             this.initEffects();
             this.initRender();
+            this.initHouses();
+            this.initPalmTrees();
         });
     }
 
@@ -126,10 +130,32 @@ export default class Application {
     }
 
     initAreas() {
-        this.areasInitializer = new AreasInitializer({
+        this.areaGenerator = new AreaGenerator({
             time: this.time,
             files: this.files,
             car: this.car,
         });
+
+        this.scene.add(this.areaGenerator.object);
+    }
+
+    initHouses() {
+        this.houseGenerator = new HouseGenerator({
+            physics: this.physics,
+            files: this.files,
+            ammount: 10,
+        });
+
+        this.scene.add(this.houseGenerator.object);
+    }
+
+    initPalmTrees() {
+        this.palmTreeGenerator = new PalmTreeGenerator({
+            physics: this.physics,
+            files: this.files,
+            ammount: 10,
+        });
+
+        this.scene.add(this.palmTreeGenerator.object);
     }
 }

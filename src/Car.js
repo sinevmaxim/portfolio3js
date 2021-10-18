@@ -27,7 +27,7 @@ export default class Car {
 
         this.models.chassis = this.files.items.carChassis;
         this.models.chassis.scale.set(2, 2, 2);
-        this.models.wheel = this.files.items.carWheel;
+        // this.models.wheel = this.files.items.carWheel;
     }
 
     initPosition() {
@@ -67,12 +67,12 @@ export default class Car {
         this.wheels = {};
         this.wheels.items = [];
 
-        for (let i = 0; i < 4; i++) {
-            const object = this.models.wheel.clone();
-            object.scale.set(3, 3, 3);
-            this.wheels.items.push(object);
-            // this.object.add(object);
-        }
+        // for (let i = 0; i < 4; i++) {
+        //     const object = this.models.wheel.clone();
+        //     object.scale.set(3, 3, 3);
+        //     this.wheels.items.push(object);
+        //     this.object.add(object);
+        // }
 
         // this.time.on("tick", () => {
         //     for (let key = 0; key < 4; key++) {

@@ -43,7 +43,7 @@ export default class Physics {
                 this.materials.defaultMaterial,
                 this.materials.defaultMaterial,
                 {
-                    friction: 1,
+                    friction: 0.85,
                     restitution: 0.0,
                     contactEquationStiffness: 1000,
                 }
@@ -71,7 +71,7 @@ export default class Physics {
                 map: this.files.items.floorTexture,
                 // metalness: 0.4,
                 // roughness: 0.8,
-                // color: 0x330033,
+                // color: 0xffffff,
                 // wireframe: true,
             })
         );
@@ -98,7 +98,7 @@ export default class Physics {
         // this.debug.add(this, "offsetY", -100, 100, 0.1);
         // this.debug.add(this, "offsetZ", -100, 100, 0.1);
 
-        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(2, 1, 0.25));
+        this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(4, 1, 0.5));
         this.car.chassis.body = new CANNON.Body({ mass: 565 });
         this.car.chassis.body.addShape(this.car.chassis.shape);
         this.car.chassis.body.position.set(0, 0, 2);
@@ -173,7 +173,7 @@ export default class Physics {
         });
 
         this.car.model.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(2, 2, 0.5),
+            new THREE.BoxBufferGeometry(4, 1, 0.5),
             this.car.model.material
         );
         this.car.model.chassis.castShadow = true;

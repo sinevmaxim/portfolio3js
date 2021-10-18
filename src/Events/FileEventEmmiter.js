@@ -25,8 +25,16 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/models/car/countach.glb",
                 type: "model",
             },
-            carWheel: { url: "/models/car/wheel.glb", type: "model" },
+            // carWheel: { url: "/models/car/wheel.glb", type: "model" },
             floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
+            githubLogo: {
+                url: "/textures/logos/github_logo.png",
+                type: "texture",
+            },
+            linkedInLogo: {
+                url: "/textures/logos/linkedin_logo.png",
+                type: "texture",
+            },
             carShadowTexture: {
                 url: "/textures/car/carShadowTexture.jpg",
                 type: "texture",

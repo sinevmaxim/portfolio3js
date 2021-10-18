@@ -1,9 +1,13 @@
+import * as THREE from "three";
+
 export default class Area {
     constructor(args) {
         this.time = args.time;
         this.files = args.files;
         this.car = args.car;
         this.position = args.position;
+
+        this.object = new THREE.Object3D();
         this.in = false;
 
         this.enterEvent = (event) => {
