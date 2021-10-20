@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as CANNON from "cannon";
 import TimeEventEmmiter from "./Events/TimeEventEmmiter";
 import Car from "./Car";
 import Physics from "./Physics";
@@ -7,10 +8,10 @@ import Light from "./Light";
 import Sound from "./Sound";
 import AreaGenerator from "./Areas/AreaGenerator";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
-import * as dat from "dat.gui";
 import Effects from "./Effects";
 import HouseGenerator from "./HouseGenerator";
 import PalmTreeGenerator from "./PalmTreeGenerator";
+import PalmTree from "./PalmTree";
 
 export default class Application {
     constructor(args) {
@@ -22,26 +23,24 @@ export default class Application {
             width: window.innerWidth,
             height: window.innerHeight,
         };
-        this.debug = new dat.GUI();
         this.sound = new Sound();
 
         this.files.on("ready", () => {
             this.initRenderer();
             this.initLight();
-            this.initCamera();
             this.initPhysics();
             this.initCar();
+            this.initCamera();
             this.initAreas();
-            this.initEffects();
+            // this.initEffects();
             this.initRender();
             this.initHouses();
             this.initPalmTrees();
+            // this.initDebug();
         });
     }
 
     initRenderer() {
-        console.info("Application - Initialazing Renderer");
-
         // Scene
         this.scene = new THREE.Scene();
 
@@ -51,7 +50,7 @@ export default class Application {
             alpha: true,
         });
         // this.renderer.setClearColor(0x414141, 1)
-        this.renderer.setClearColor(0x000000, 1);
+        // this.renderer.setClearColor(0x000000, 1);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         // this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
@@ -71,8 +70,6 @@ export default class Application {
     }
 
     initPhysics() {
-        console.info("Application - Initializing Physics");
-
         this.physics = new Physics({
             time: this.time,
             camera: this.camera,
@@ -84,8 +81,6 @@ export default class Application {
     }
 
     initCar() {
-        console.info("Application - Initializing Car");
-
         this.car = new Car({
             time: this.time,
             physics: this.physics,
@@ -97,12 +92,11 @@ export default class Application {
     }
 
     initCamera() {
-        console.info("Application - Initializing Camera");
-
         this.camera = new Camera({
             time: this.time,
             renderer: this.renderer,
             sizes: this.sizes,
+            car: this.car,
         });
         this.scene.add(this.camera.object);
     }
@@ -113,7 +107,6 @@ export default class Application {
     }
 
     initRender() {
-        console.info("Application - Initialazing Render");
         this.time.on("tick", () => {
             this.renderer.render(this.scene, this.camera.cameraInstance);
         });
@@ -143,7 +136,10 @@ export default class Application {
         this.houseGenerator = new HouseGenerator({
             physics: this.physics,
             files: this.files,
-            ammount: 10,
+            sound: this.sound,
+            car: this.car,
+            // time: this.time,
+            ammount: 5,
         });
 
         this.scene.add(this.houseGenerator.object);
@@ -158,4 +154,15 @@ export default class Application {
 
         this.scene.add(this.palmTreeGenerator.object);
     }
+
+    // initDebug() {
+    //     this.cannonDebugRenderer = new THREE.CannonDebugRenderer(
+    //         this.scene,
+    //         this.physics.world
+    //     );
+
+    //     this.time.on("tick", () => {
+    //         this.cannonDebugRenderer.update();
+    //     });
+    // }
 }

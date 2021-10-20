@@ -4,6 +4,12 @@ export default class Sound {
     constructor() {
         Howler.volume(0.65);
         this.car = {};
+        this.music = new Howl({
+            src: ["/audio/music/music.mp3"],
+            volume: 0.4,
+            loop: true,
+        });
+
         this.car.engine = new Howl({
             src: ["/audio/car/car_engine.mp3"],
             volume: 0.1,

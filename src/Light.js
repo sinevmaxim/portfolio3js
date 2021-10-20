@@ -10,7 +10,6 @@ export default class Light {
     }
 
     initLights() {
-        console.info("Light - Initializing");
         this.light.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.light.directionalLight = new THREE.DirectionalLight(0xfd00e1, 1);
         this.light.directionalLight.position.set(16, 106, 30);

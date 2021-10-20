@@ -7,6 +7,9 @@ export default class Area {
         this.car = args.car;
         this.position = args.position;
 
+        this.width = this.position.xTwo - this.position.xOne;
+        this.height = this.position.yTwo - this.position.yOne;
+
         this.object = new THREE.Object3D();
         this.in = false;
 
@@ -16,7 +19,27 @@ export default class Area {
             }
         };
 
+        this.initFrame();
         this.checkPosition();
+    }
+
+    initFrame() {
+        this.frame = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(this.width, this.height, 1, 1),
+            new THREE.MeshBasicMaterial({
+                transparent: true,
+                alphaMap: this.files.items.areaFrame,
+                color: 0x661c52,
+            })
+        );
+
+        this.frame.position.set(
+            this.position.xOne + this.width / 2,
+            this.position.yOne + this.height / 2,
+            0.08
+        );
+
+        this.object.add(this.frame);
     }
 
     // Function to override
@@ -30,11 +53,13 @@ export default class Area {
 
     triggerIn() {
         window.addEventListener("keydown", this.enterEvent);
+        this.frame.material.color.setHex(0xff44cc);
         this.customTriggerIn();
     }
 
     triggerOut() {
         window.removeEventListener("keydown", this.enterEvent);
+        this.frame.material.color.setHex(0x661c52);
         this.customTriggerOut();
     }
 

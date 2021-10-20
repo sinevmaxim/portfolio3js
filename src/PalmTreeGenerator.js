@@ -14,14 +14,14 @@ export default class PalmTreeGenerator {
 
     generate() {
         this.trees = [];
-        this.geometry = new THREE.BoxBufferGeometry(1, 1, 10);
+        this.geometry = new THREE.BoxBufferGeometry(2, 2, 20);
         this.material = new THREE.MeshStandardMaterial({
             wireframe: true,
         });
-        this.shape = new CANNON.Box(new CANNON.Vec3(1, 1, 10));
+        this.shape = new CANNON.Box(new CANNON.Vec3(1.2, 1.2, 10));
 
         for (let i = 0; i < this.ammount; i++) {
-            let positionY = 10 + i * 5;
+            let positionY = 10 + i * 10;
 
             let tree = new PalmTree({
                 physics: this.physics,

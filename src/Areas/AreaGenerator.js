@@ -20,15 +20,15 @@ export default class AreaGenerator {
             time: this.time,
             files: this.files,
             car: this.car,
-            position: { xOne: 10, yOne: 10, xTwo: 30, yTwo: 30 },
+            position: { xOne: 3, yOne: 3, xTwo: 7, yTwo: 7 },
         });
-        // this.object.add(this.areas.photoShoot.object);
+        this.object.add(this.areas.photoShoot.object);
 
         this.areas.githubArea = new GithubArea({
             time: this.time,
             files: this.files,
             car: this.car,
-            position: { xOne: -30, yOne: -30, xTwo: -10, yTwo: -10 },
+            position: { xOne: -7, yOne: -7, xTwo: -3, yTwo: -3 },
         });
         this.object.add(this.areas.githubArea.object);
 
@@ -36,8 +36,8 @@ export default class AreaGenerator {
             time: this.time,
             files: this.files,
             car: this.car,
-            position: { xOne: -10, yOne: -10, xTwo: 10, yTwo: 10 },
+            position: { xOne: -3, yOne: -3, xTwo: 3, yTwo: 3 },
         });
-        // this.object.add(this.areas.linkedInArea.object);
+        this.object.add(this.areas.linkedInArea.object);
     }
 }

@@ -1,4 +1,5 @@
 import Area from "./Area";
+import * as THREE from "three";
 
 export default class PhotoShootArea extends Area {
     constructor(args) {
@@ -6,16 +7,10 @@ export default class PhotoShootArea extends Area {
     }
 
     // Light up parking lot
-    customTriggerIn() {
-        console.log("You are in the area of PhotoShoot");
-    }
+    customTriggerIn() {}
 
     // Off the parking lot light
-    customTriggerOut() {
-        console.log("You are out of the area of PhotoShoot");
-    }
+    customTriggerOut() {}
 
-    customEnterEvent() {
-        console.log("PHOTO SHOOT");
-    }
+    customEnterEvent() {}
 }

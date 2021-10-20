@@ -18,8 +18,6 @@ export default class FileEventEmmiter extends EventEmmiter {
     }
 
     load() {
-        console.info("Files - Loading");
-
         this.toLoad = {
             carChassis: {
                 url: "/models/car/countach.glb",
@@ -37,6 +35,10 @@ export default class FileEventEmmiter extends EventEmmiter {
             },
             carShadowTexture: {
                 url: "/textures/car/carShadowTexture.jpg",
+                type: "texture",
+            },
+            areaFrame: {
+                url: "/textures/areaFrame.png",
                 type: "texture",
             },
         };
@@ -62,7 +64,6 @@ export default class FileEventEmmiter extends EventEmmiter {
 
     ready() {
         this.emit("ready");
-        console.info("Files - Every item loaded");
     }
 
     progress(url, loaded, total) {

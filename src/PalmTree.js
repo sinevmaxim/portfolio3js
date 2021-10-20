@@ -19,7 +19,9 @@ export default class PalmTree {
 
     initModel() {}
     initPhysicsObject() {
-        this.body = new CANNON.Body({ mass: 0, shape: this.shape });
+        this.body = new CANNON.Body({ mass: 0 });
+        this.body.addShape(this.shape);
+        this.body.allowSleep = true;
         this.hitbox = new THREE.Mesh(this.geometry, this.material);
 
         this.body.position.set(this.positionX, this.positionY, 0);
@@ -27,5 +29,14 @@ export default class PalmTree {
 
         this.physics.world.add(this.body);
         this.object.add(this.hitbox);
+
+        this.body.addEventListener("collide", () => {
+            console.log("Collided");
+        });
+
+        this.physics.world.addEventListener("postStep", () => {
+            this.hitbox.position.copy(this.body.position);
+            this.hitbox.quaternion.copy(this.body.quaternion);
+        });
     }
 }

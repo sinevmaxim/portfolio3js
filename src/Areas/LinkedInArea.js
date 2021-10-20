@@ -1,19 +1,35 @@
 import Area from "./Area";
+import * as THREE from "three";
 
 export default class LinkedInArea extends Area {
     constructor(args) {
         super(args);
+        this.plane = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
+        this.mesh = new THREE.Mesh(
+            this.plane,
+            new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                alphaMap: this.files.items.linkedInLogo,
+                transparent: true,
+                color: 0xff44cc,
+            })
+        );
+
+        this.mesh.position.set(
+            (this.position.xOne + this.position.xTwo) / 2,
+            (this.position.yOne + this.position.yTwo) / 2,
+            4
+        );
+
+        this.mesh.rotation.x = Math.PI / 2;
+        this.object.add(this.mesh);
     }
 
     // Light up parking lot
-    customTriggerIn() {
-        console.log("You are in the area of LinkedIn");
-    }
+    customTriggerIn() {}
 
     // Off the parking lot light
-    customTriggerOut() {
-        console.log("You are out of the area of LinkedIn");
-    }
+    customTriggerOut() {}
 
     customEnterEvent() {
         window.open("https://www.linkedin.com/in/maxim-sinev/", "_blank");
