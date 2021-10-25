@@ -8,11 +8,16 @@ export default class FileEventEmmiter extends EventEmmiter {
         this.loaders = {};
         this.items = {};
         this.animations = {};
+        this.audioListener = new THREE.AudioListener();
 
         this.manager = new THREE.LoadingManager();
         this.manager.onLoad = () => this.ready();
         this.manager.onProgress = (url, loaded, total) =>
             this.progress(url, loaded, total);
+
+        this.loaders.gltfLoader = new GLTFLoader(this.manager);
+        this.loaders.textureLoader = new THREE.TextureLoader(this.manager);
+        this.loaders.audioLoader = new THREE.AudioLoader(this.manager);
 
         this.load();
     }
@@ -41,10 +46,11 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/textures/areaFrame.png",
                 type: "texture",
             },
+            clubMusic: {
+                url: "/audio/music/music.mp3",
+                type: "audio",
+            },
         };
-
-        this.loaders.gltfLoader = new GLTFLoader(this.manager);
-        this.loaders.textureLoader = new THREE.TextureLoader(this.manager);
 
         Object.entries(this.toLoad).forEach(([name, data]) => {
             if (data.type == "model") {
@@ -53,11 +59,27 @@ export default class FileEventEmmiter extends EventEmmiter {
                     if (gltf.animations.length != 0) {
                         this.animations[name] = gltf.animations;
                     }
+                    return;
                 });
             }
 
             if (data.type == "texture") {
                 this.items[name] = this.loaders.textureLoader.load(data.url);
+                return;
+            }
+
+            if (data.type == "audio") {
+                this.loaders.audioLoader.load(data.url, (buffer) => {
+                    this.items[name] = new THREE.PositionalAudio(
+                        this.audioListener
+                    );
+                    this.items[name].setBuffer(buffer);
+                    this.emit(`${name}_ready`);
+                    // this.items[name].setRefDistance(20);
+                    // this.items[name].setVolume(0.5);
+                    // this.items[name].play();
+                    return;
+                });
             }
         });
     }

@@ -7,7 +7,7 @@ export default class TimeEventEmmiter extends EventEmmiter {
         this.start = Date.now();
         this.current = this.start;
         this.elapsed = 0;
-        this.delta = 0;
+        this.delta = 16;
 
         this.tick = this.tick.bind(this);
         this.tick();

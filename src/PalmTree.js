@@ -24,7 +24,10 @@ export default class PalmTree {
         this.body.allowSleep = true;
         this.hitbox = new THREE.Mesh(this.geometry, this.material);
 
-        this.body.position.set(this.positionX, this.positionY, 0);
+        this.hitbox.receiveShadow = true;
+        this.hitbox.castShadow = true;
+
+        this.body.position.set(this.positionX, this.positionY, 10);
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);

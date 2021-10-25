@@ -25,7 +25,7 @@ export default class HouseGenerator {
             this.size,
             this.size
         );
-        this.material = new THREE.MeshStandardMaterial({ wireframe: true });
+        this.material = new THREE.MeshStandardMaterial();
         this.shape = new CANNON.Box(
             new CANNON.Vec3(this.size / 2, this.size / 2, this.size / 2)
         );

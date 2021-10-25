@@ -7,9 +7,7 @@ export default class Physics {
         this.camera = args.camera;
         this.debug = args.debug;
         this.files = args.files;
-        this.light = args.light;
         this.controls = args.controls;
-        this.car = args.car;
 
         this.object = new THREE.Object3D();
 
@@ -24,9 +22,11 @@ export default class Physics {
 
     initWorld() {
         this.world = new CANNON.World();
-        this.world.broadphase = new CANNON.SAPBroadphase(this.world);
-        this.world.gravity.set(0, 0, -10);
-        this.world.defaultContactMaterial.friction = 0;
+        // this.world.broadphase = new CANNON.SAPBroadphase(this.world);
+        // this.world.broadphase = new CANNON.NaiveBroadphase();
+        // this.world.broadphase.useBoundingBoxes = true;
+        this.world.gravity.set(0, 0, -9.3);
+        this.world.defaultContactMaterial.friction = 0.01;
     }
 
     initMaterial() {
@@ -39,9 +39,10 @@ export default class Physics {
                 this.materials.defaultMaterial,
                 this.materials.defaultMaterial,
                 {
-                    friction: 0.85,
-                    restitution: 0.0,
+                    friction: 0.3,
+                    restitution: 0.5,
                     contactEquationStiffness: 1000,
+                    contactEquationRelaxation: 4000,
                 }
             );
 
@@ -72,226 +73,6 @@ export default class Physics {
         this.floor.model.quaternion.copy(this.floor.body.quaternion);
 
         this.object.add(this.floor.model);
-        this.world.addBody(this.floor.body);
-        // this.offsetX = 0;
-        // this.offsetY = 34;
-        // this.offsetZ = 21;
-    }
-
-    initCar() {
-        // this.car = {};
-        // this.car.chassis = {};
-        // this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(3, 1.5, 0.2));
-        // this.car.chassis.body = new CANNON.Body({ mass: 565 });
-        // this.car.chassis.body.addShape(this.car.chassis.shape);
-        // this.car.chassis.body.position.set(0, 0, 2);
-        // // Wheels options
-        // this.car.wheels = {};
-        // this.car.wheels.options = {
-        //     radius: 0.32,
-        //     directionLocal: new CANNON.Vec3(0, 0, -1),
-        //     suspensionStiffness: 45,
-        //     suspensionRestLength: 0.4,
-        //     frictionSlip: 5,
-        //     dampingRelaxation: 2.8,
-        //     dampingCompression: 4.5,
-        //     maxSuspensionForce: 100000,
-        //     rollInfluence: 0.01,
-        //     axleLocal: new CANNON.Vec3(0, 1, 0),
-        //     chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
-        //     maxSuspensionTravel: 0.1,
-        //     customSlidingRotationalSpeed: -30,
-        //     useCustomSlidingRotationalSpeed: true,
-        // };
-        // // Create the vehicle
-        // this.car.vehicle = new CANNON.RaycastVehicle({
-        //     chassisBody: this.car.chassis.body,
-        // });
-        // this.car.wheels.options.chassisConnectionPointLocal.set(1.9, 1, 0);
-        // this.car.vehicle.addWheel(this.car.wheels.options);
-        // this.car.wheels.options.chassisConnectionPointLocal.set(1.9, -1, 0);
-        // this.car.vehicle.addWheel(this.car.wheels.options);
-        // this.car.wheels.options.chassisConnectionPointLocal.set(-1.4, 1, 0);
-        // this.car.vehicle.addWheel(this.car.wheels.options);
-        // this.car.wheels.options.chassisConnectionPointLocal.set(-1.4, -1, 0);
-        // this.car.vehicle.addWheel(this.car.wheels.options);
-        // this.car.vehicle.addToWorld(this.world);
-        // this.car.wheels.bodies = [];
-        // for (const wheelInfo of this.car.vehicle.wheelInfos) {
-        //     const cylinderShape = new CANNON.Cylinder(
-        //         wheelInfo.radius,
-        //         wheelInfo.radius,
-        //         wheelInfo.radius,
-        //         20
-        //     );
-        //     const wheelBody = new CANNON.Body({
-        //         mass: 0,
-        //     });
-        //     wheelBody.type = CANNON.Body.KINEMATIC;
-        //     wheelBody.collisionFilterGroup = 0; // turn off collisions
-        //     const quaternion = new CANNON.Quaternion();
-        //     quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
-        //     wheelBody.addShape(cylinderShape, new CANNON.Vec3()), quaternion;
-        //     this.car.wheels.bodies.push(wheelBody);
-        //     this.world.addBody(wheelBody);
-        // }
-        // this.car.model = {};
-        // this.car.model.material = new THREE.MeshBasicMaterial({
-        //     color: 0xffffff,
-        //     wireframe: true,
-        // });
-        // this.car.model.chassis = new THREE.Mesh(
-        //     new THREE.BoxBufferGeometry(3 * 2, 1.5 * 2, 0.2 * 2),
-        //     this.car.model.material
-        // );
-        // this.car.model.chassis.castShadow = true;
-        // this.object.add(this.car.model.chassis);
-        // this.car.model.wheels = [];
-        // const wheelGeometry = new THREE.CylinderBufferGeometry(
-        //     this.car.wheels.options.radius,
-        //     this.car.wheels.options.radius,
-        //     this.car.wheels.options.radius,
-        //     8,
-        //     1
-        // );
-        // for (let i = 0; i < 4; i++) {
-        //     const wheel = new THREE.Mesh(
-        //         wheelGeometry,
-        //         this.car.model.material
-        //     );
-        //     wheel.castShadow = true;
-        //     this.car.model.wheels.push(wheel);
-        //     this.object.add(wheel);
-        // }
-        // // this.light.light.directionalLight.target.position.copy(
-        // //     this.car.model.chassis.position
-        // // );
-        // this.object.add(this.light.light.directionalLight.target);
-        // this.world.addEventListener("postStep", () => {
-        //     for (let i = 0; i < this.car.vehicle.wheelInfos.length; i++) {
-        //         this.car.vehicle.updateWheelTransform(i);
-        //         const transform = this.car.vehicle.wheelInfos[i].worldTransform;
-        //         this.car.wheels.bodies[i].position.copy(transform.position);
-        //         this.car.wheels.bodies[i].quaternion.copy(transform.quaternion);
-        //         this.car.model.wheels[i].quaternion.copy(transform.quaternion);
-        //         this.car.model.wheels[i].position.copy(transform.position);
-        //         // Rotate the wheels on the right
-        //         if (i === 1 || i === 3) {
-        //             const rotationQuaternion = new CANNON.Quaternion(
-        //                 0,
-        //                 0,
-        //                 0,
-        //                 1
-        //             );
-        //             rotationQuaternion.setFromAxisAngle(
-        //                 new CANNON.Vec3(0, 0, 1),
-        //                 Math.PI
-        //             );
-        //             this.car.wheels.bodies[i].quaternion =
-        //                 this.car.wheels.bodies[i].quaternion.mult(
-        //                     rotationQuaternion
-        //                 );
-        //         }
-        //     }
-        //     this.car.model.chassis.position.copy(
-        //         this.car.chassis.body.position
-        //     );
-        //     // this.light.light.directionalLight.target.position.copy(
-        //     //     this.car.model.chassis.position
-        //     // );
-        //     if (this.camera.orbit) {
-        //         this.camera.cameraInstance.position.set(
-        //             this.car.model.chassis.position.x - this.offsetX,
-        //             this.car.model.chassis.position.y - this.offsetY,
-        //             this.car.model.chassis.position.z + this.offsetZ
-        //         );
-        //         this.camera.cameraInstance.lookAt(
-        //             this.car.model.chassis.position
-        //         );
-        //     }
-        //     this.floor.model.position.x = this.car.model.chassis.position.x;
-        //     this.floor.model.position.y = this.car.model.chassis.position.y;
-        //     this.car.model.chassis.quaternion.copy(
-        //         this.car.chassis.body.quaternion
-        //     );
-        // });
-        // this.car.options = {};
-        // this.car.options.maxSteerVal = 0.3;
-        // this.car.options.maxForce = 500;
-        // this.car.options.maxForceMultiplier = 1;
-        // this.car.options.maxForceMultiplierBack = 1;
-        // this.car.options.brakeForce = 100000;
-        // const controlsHandler = (event) => {
-        //     const up = event.type == "keyup";
-        //     if (!up && event.type !== "keydown") {
-        //         return;
-        //     }
-        //     this.car.vehicle.setBrake(0, 0);
-        //     this.car.vehicle.setBrake(0, 1);
-        //     this.car.vehicle.setBrake(0, 2);
-        //     this.car.vehicle.setBrake(0, 3);
-        //     switch (event.keyCode) {
-        //         case 38: // forward
-        //             this.car.vehicle.applyEngineForce(
-        //                 up
-        //                     ? 0
-        //                     : -this.car.options.maxForce *
-        //                           this.car.options.maxForceMultiplier,
-        //                 2
-        //             );
-        //             this.car.vehicle.applyEngineForce(
-        //                 up
-        //                     ? 0
-        //                     : -this.car.options.maxForce *
-        //                           this.car.options.maxForceMultiplier,
-        //                 3
-        //             );
-        //             break;
-        //         case 40: // backward
-        //             this.car.vehicle.applyEngineForce(
-        //                 up
-        //                     ? 0
-        //                     : this.car.options.maxForce *
-        //                           this.car.options.maxForceMultiplierBack,
-        //                 2
-        //             );
-        //             this.car.vehicle.applyEngineForce(
-        //                 up
-        //                     ? 0
-        //                     : this.car.options.maxForce *
-        //                           this.car.options.maxForceMultiplierBack,
-        //                 3
-        //             );
-        //             break;
-        //         // case 66: // b
-        //         //     this.car.vehicle.setBrake(this.car.options.brakeForce, 0);
-        //         //     this.car.vehicle.setBrake(this.car.options.brakeForce, 1);
-        //         //     this.car.vehicle.setBrake(this.car.options.brakeForce, 2);
-        //         //     this.car.vehicle.setBrake(this.car.options.brakeForce, 3);
-        //         //     break;
-        //         case 39: // right
-        //             this.car.vehicle.setSteeringValue(
-        //                 up ? 0 : -this.car.options.maxSteerVal,
-        //                 0
-        //             );
-        //             this.car.vehicle.setSteeringValue(
-        //                 up ? 0 : -this.car.options.maxSteerVal,
-        //                 1
-        //             );
-        //             break;
-        //         case 37: // left
-        //             this.car.vehicle.setSteeringValue(
-        //                 up ? 0 : this.car.options.maxSteerVal,
-        //                 0
-        //             );
-        //             this.car.vehicle.setSteeringValue(
-        //                 up ? 0 : this.car.options.maxSteerVal,
-        //                 1
-        //             );
-        //             break;
-        //     }
-        // };
-        // document.addEventListener("keydown", controlsHandler);
-        // document.addEventListener("keyup", controlsHandler);
+        this.world.add(this.floor.body);
     }
 }

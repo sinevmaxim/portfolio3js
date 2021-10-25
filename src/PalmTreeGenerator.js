@@ -15,9 +15,7 @@ export default class PalmTreeGenerator {
     generate() {
         this.trees = [];
         this.geometry = new THREE.BoxBufferGeometry(2, 2, 20);
-        this.material = new THREE.MeshStandardMaterial({
-            wireframe: true,
-        });
+        this.material = new THREE.MeshStandardMaterial();
         this.shape = new CANNON.Box(new CANNON.Vec3(1.2, 1.2, 10));
 
         for (let i = 0; i < this.ammount; i++) {

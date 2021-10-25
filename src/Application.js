@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import * as CANNON from "cannon";
 import TimeEventEmmiter from "./Events/TimeEventEmmiter";
 import Car from "./Car";
 import Physics from "./Physics";
@@ -8,10 +7,10 @@ import Light from "./Light";
 import Sound from "./Sound";
 import AreaGenerator from "./Areas/AreaGenerator";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
-import Effects from "./Effects";
 import HouseGenerator from "./HouseGenerator";
 import PalmTreeGenerator from "./PalmTreeGenerator";
-import PalmTree from "./PalmTree";
+import Controls from "./Events/Controls";
+import Effects from "./Effects";
 
 export default class Application {
     constructor(args) {
@@ -29,14 +28,14 @@ export default class Application {
             this.initRenderer();
             this.initLight();
             this.initPhysics();
+            // this.initControls();
             this.initCar();
             this.initCamera();
             this.initAreas();
-            // this.initEffects();
-            this.initRender();
             this.initHouses();
             this.initPalmTrees();
-            // this.initDebug();
+            this.initRender();
+            // this.initEffects();
         });
     }
 
@@ -47,7 +46,7 @@ export default class Application {
         // Renderer
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
-            alpha: true,
+            // alpha: true,
         });
         // this.renderer.setClearColor(0x414141, 1)
         // this.renderer.setClearColor(0x000000, 1);
@@ -55,11 +54,11 @@ export default class Application {
         // this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         // this.renderer.physicallyCorrectLights = true;
-        // this.renderer.shadowMap.enabled = true;
-        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         // this.renderer.gammaFactor = 2.2;
         // this.renderer.gammaOutPut = true;
-        // this.renderer.autoClear = false;
+        this.renderer.autoClear = false;
 
         // Resize event
         window.addEventListener("resize", () => {
@@ -69,13 +68,16 @@ export default class Application {
         });
     }
 
+    initControls() {
+        this.controls = new Controls();
+    }
+
     initPhysics() {
         this.physics = new Physics({
             time: this.time,
             camera: this.camera,
             debug: this.debug,
             files: this.files,
-            light: this.light,
         });
         this.scene.add(this.physics.object);
     }
@@ -87,6 +89,7 @@ export default class Application {
             files: this.files,
             sound: this.sound,
             light: this.light,
+            // controls: this.controls,
         });
         this.scene.add(this.car.object);
     }
@@ -97,6 +100,7 @@ export default class Application {
             renderer: this.renderer,
             sizes: this.sizes,
             car: this.car,
+            files: this.files,
         });
         this.scene.add(this.camera.object);
     }
@@ -113,13 +117,13 @@ export default class Application {
     }
 
     initEffects() {
-        // this.effects = new Effects({
-        //     time: this.time,
-        //     camera: this.camera,
-        //     sizes: this.sizes,
-        //     renderer: this.renderer,
-        //     scene: this.scene,
-        // });
+        this.effects = new Effects({
+            time: this.time,
+            camera: this.camera,
+            sizes: this.sizes,
+            renderer: this.renderer,
+            scene: this.scene,
+        });
     }
 
     initAreas() {
@@ -154,15 +158,4 @@ export default class Application {
 
         this.scene.add(this.palmTreeGenerator.object);
     }
-
-    // initDebug() {
-    //     this.cannonDebugRenderer = new THREE.CannonDebugRenderer(
-    //         this.scene,
-    //         this.physics.world
-    //     );
-
-    //     this.time.on("tick", () => {
-    //         this.cannonDebugRenderer.update();
-    //     });
-    // }
 }

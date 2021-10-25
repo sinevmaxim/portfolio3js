@@ -1,18 +1,16 @@
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as THREE from "three";
 
 export default class Camera {
     constructor(args) {
         this.time = args.time;
+        this.files = args.files;
         this.renderer = args.renderer;
         this.sizes = args.sizes;
         this.car = args.car;
 
         this.object = new THREE.Object3D();
-        // this.orbit = true;
 
         this.initCamera();
-        // this.initControls();
     }
 
     initCamera() {
@@ -30,6 +28,7 @@ export default class Camera {
         this.cameraInstance.position.set(20, 20, 20);
         this.cameraInstance.lookAt(new THREE.Vector3());
 
+        this.cameraInstance.add(this.files.audioListener);
         this.object.add(this.cameraInstance);
 
         window.addEventListener("resize", () => {
@@ -46,16 +45,4 @@ export default class Camera {
             this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
         });
     }
-
-    // initControls() {
-    //     this.controls = new OrbitControls(
-    //         this.cameraInstance,
-    //         this.renderer.domElement
-    //     );
-    //     this.controls.enableDamping = true;
-
-    //     this.time.on("tick", () => {
-    //         this.controls.update();
-    //     });
-    // }
 }
