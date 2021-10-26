@@ -20,6 +20,7 @@ export default class Area {
         };
 
         this.initFrame();
+        this.initLogo();
         this.checkPosition();
     }
 
@@ -43,23 +44,41 @@ export default class Area {
     }
 
     // Function to override
-    customTriggerIn() {}
+    customTriggerIn() {
+        throw new Error(
+            "Abstract function error: This function must be overriden"
+        );
+    }
 
     // Function to override
-    customTriggerOut() {}
+    customTriggerOut() {
+        throw new Error(
+            "Abstract function error: This function must be overriden"
+        );
+    }
 
     // Function to override
-    customEnterEvent() {}
+    customEnterEvent() {
+        throw new Error(
+            "Abstract function error: This function must be overriden"
+        );
+    }
 
     triggerIn() {
         window.addEventListener("keydown", this.enterEvent);
         this.frame.material.color.setHex(0xff44cc);
+        this.logo.visible = false;
+        this.enterKeyLogo.visible = true;
+
         this.customTriggerIn();
     }
 
     triggerOut() {
         window.removeEventListener("keydown", this.enterEvent);
         this.frame.material.color.setHex(0x661c52);
+        this.logo.visible = true;
+        this.enterKeyLogo.visible = false;
+
         this.customTriggerOut();
     }
 
@@ -81,6 +100,45 @@ export default class Area {
                 }
                 this.in = false;
             }
+        });
+    }
+
+    initLogo() {
+        this.plane = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
+
+        this.logo = new THREE.Mesh(
+            this.plane,
+            new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                transparent: true,
+            })
+        );
+
+        this.enterKeyLogo = new THREE.Mesh(
+            this.plane,
+            new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: this.files.items.enterKeyLogo,
+                transparent: true,
+            })
+        );
+        this.enterKeyLogo.visible = false;
+
+        this.logo.position.set(
+            (this.position.xOne + this.position.xTwo) / 2,
+            (this.position.yOne + this.position.yTwo) / 2,
+            4
+        );
+
+        this.logo.rotation.x = Math.PI / 2;
+        this.enterKeyLogo.rotation.x = Math.PI / 2;
+
+        this.object.add(this.logo, this.enterKeyLogo);
+
+        this.time.on("tick", () => {
+            this.logo.rotation.y += this.time.delta / 1000;
+            this.logo.position.z = 4 + Math.sin(this.time.elapsed * 0.001) / 3;
+            this.enterKeyLogo.position.copy(this.logo.position);
         });
     }
 }

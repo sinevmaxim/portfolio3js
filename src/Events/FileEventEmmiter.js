@@ -50,6 +50,14 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/audio/music/music.mp3",
                 type: "audio",
             },
+            enterKeyLogo: {
+                url: "/textures/logos/enter_key.png",
+                type: "texture",
+            },
+            photoshootLogo: {
+                url: "/textures/logos/photoshoot_logo.png",
+                type: "texture",
+            },
         };
 
         Object.entries(this.toLoad).forEach(([name, data]) => {

@@ -5,34 +5,13 @@ export default class LinkedInArea extends Area {
     constructor(args) {
         super(args);
 
-        this.initLogo();
+        this.changeLogo();
     }
 
-    initLogo() {
-        this.plane = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
-        this.logo = new THREE.Mesh(
-            this.plane,
-            new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                alphaMap: this.files.items.linkedInLogo,
-                transparent: true,
-                color: 0xff44cc,
-            })
-        );
-
-        this.logo.position.set(
-            (this.position.xOne + this.position.xTwo) / 2,
-            (this.position.yOne + this.position.yTwo) / 2,
-            4
-        );
-
-        this.logo.rotation.x = Math.PI / 2;
-        this.object.add(this.logo);
-
-        this.time.on("tick", () => {
-            this.logo.rotation.y += this.time.delta / 1000;
-            this.logo.position.z = 4 + Math.sin(this.time.elapsed * 0.001) / 3;
-        });
+    changeLogo() {
+        this.logo.material.alphaMap = this.files.items.linkedInLogo;
+        this.logo.material.color.setHex(0xff44cc);
+        this.logo.material.needsUpdate = true;
     }
 
     // Light up parking lot
