@@ -3,40 +3,47 @@ export default class Controls {
         this.action = {};
         this.keyDownEvent = (event) => {
             switch (event.keyCode) {
-                case 38: // forward
+                case 38:
                     this.action.forward = true;
                     break;
 
-                case 40: // backward
+                case 40:
                     this.action.back = true;
                     break;
 
-                case 39: // right
+                case 39:
                     this.action.right = true;
                     break;
 
-                case 37: // left
+                case 37:
                     this.action.left = true;
+                    break;
+
+                case 78:
+                    this.action.engine = true;
                     break;
             }
         };
 
         this.keyUpEvent = (event) => {
             switch (event.keyCode) {
-                case 38: // forward
+                case 38:
                     this.action.forward = false;
                     break;
 
-                case 40: // backward
+                case 40:
                     this.action.back = false;
                     break;
 
-                case 39: // right
+                case 39:
                     this.action.right = false;
                     break;
 
-                case 37: // left
+                case 37:
                     this.action.left = false;
+                    break;
+                case 78:
+                    this.action.engine = false;
                     break;
             }
         };

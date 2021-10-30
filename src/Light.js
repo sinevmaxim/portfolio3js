@@ -13,6 +13,15 @@ export default class Light {
         this.directionalLight = new THREE.DirectionalLight(0xfd00e1, 1);
         this.directionalLight.position.set(16, 106, 30);
 
+        this.directionalLight.shadow.mapSize.width = 1024;
+        this.directionalLight.shadow.mapSize.height = 1024;
+        this.directionalLight.shadow.camera.near = 15;
+        this.directionalLight.shadow.camera.far = 200;
+        this.directionalLight.shadow.camera.left = -150;
+        this.directionalLight.shadow.camera.right = 150;
+        this.directionalLight.shadow.camera.top = 150;
+        this.directionalLight.shadow.camera.bottom = -150;
+
         this.rightSpotLight = new THREE.SpotLight(
             0xfdfadd,
             10,
@@ -31,8 +40,9 @@ export default class Light {
             2
         );
 
-        this.leftSpotLight.castShadow = true;
-        this.rightSpotLight.castShadow = true;
+        // this.leftSpotLight.castShadow = true;
+        // this.rightSpotLight.castShadow = true;
+        this.directionalLight.castShadow = true;
 
         this.leftStopLight = new THREE.PointLight(0xff0000, 0, 1, 1);
         this.rightStopLight = new THREE.PointLight(0xff0000, 0, 1, 1);

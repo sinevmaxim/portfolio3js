@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as TWEEN from "@tweenjs/tween.js";
 import TimeEventEmmiter from "./Events/TimeEventEmmiter";
 import Car from "./Car";
 import Physics from "./Physics";
@@ -11,6 +12,9 @@ import HouseGenerator from "./HouseGenerator";
 import PalmTreeGenerator from "./PalmTreeGenerator";
 import Controls from "./Events/Controls";
 import Effects from "./Effects";
+import InfoTextGenerator from "./InfoTextGenerator";
+import LandscapeGenerator from "./LandscapeGenerator";
+import Environment from "./Environment";
 
 export default class Application {
     constructor(args) {
@@ -28,12 +32,15 @@ export default class Application {
             this.initRenderer();
             this.initLight();
             this.initPhysics();
-            // this.initControls();
+            this.initControls();
             this.initCar();
             this.initCamera();
             this.initAreas();
-            this.initHouses();
-            this.initPalmTrees();
+            // this.initHouses();
+            // this.initPalmTrees();
+            // this.initInfo();
+            this.initEnvironment();
+            this.initLandscape();
             this.initRender();
             // this.initEffects();
         });
@@ -89,7 +96,7 @@ export default class Application {
             files: this.files,
             sound: this.sound,
             light: this.light,
-            // controls: this.controls,
+            controls: this.controls,
         });
         this.scene.add(this.car.object);
     }
@@ -113,6 +120,7 @@ export default class Application {
     initRender() {
         this.time.on("tick", () => {
             this.renderer.render(this.scene, this.camera.cameraInstance);
+            TWEEN.update();
         });
     }
 
@@ -131,31 +139,53 @@ export default class Application {
             time: this.time,
             files: this.files,
             car: this.car,
+            camera: this.camera,
         });
 
         this.scene.add(this.areaGenerator.object);
     }
 
-    initHouses() {
-        this.houseGenerator = new HouseGenerator({
+    initLandscape() {
+        this.landscapeGenerator = new LandscapeGenerator({
             physics: this.physics,
             files: this.files,
             sound: this.sound,
             car: this.car,
-            // time: this.time,
-            ammount: 5,
         });
 
-        this.scene.add(this.houseGenerator.object);
+        this.scene.add(this.landscapeGenerator.object);
     }
 
-    initPalmTrees() {
-        this.palmTreeGenerator = new PalmTreeGenerator({
-            physics: this.physics,
-            files: this.files,
-            ammount: 10,
+    // initHouses() {
+    //     this.houseGenerator = new HouseGenerator({
+    // physics: this.physics,
+    // files: this.files,
+    // sound: this.sound,
+    // car: this.car,
+    //         // time: this.time,
+    //         ammount: 5,
+    //     });
+
+    //     this.scene.add(this.houseGenerator.object);
+    // }
+
+    // initPalmTrees() {
+    //     this.palmTreeGenerator = new PalmTreeGenerator({
+    //         physics: this.physics,
+    //         files: this.files,
+    //         sound: this.sound,
+    //         ammount: 10,
+    //     });
+
+    //     this.scene.add(this.palmTreeGenerator.object);
+    // }
+
+    initEnvironment() {
+        this.environment = new Environment({
+            car: this.car,
+            time: this.time,
         });
 
-        this.scene.add(this.palmTreeGenerator.object);
+        this.scene.add(this.environment.object);
     }
 }

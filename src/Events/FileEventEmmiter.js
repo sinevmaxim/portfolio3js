@@ -58,6 +58,22 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/textures/logos/photoshoot_logo.png",
                 type: "texture",
             },
+            clubLogo: {
+                url: "/textures/logos/club_logo.png",
+                type: "texture",
+            },
+            engineStartInfoText: {
+                url: "/textures/info/engine_start_info.png",
+                type: "texture",
+            },
+            popUpLightsInfoText: {
+                url: "/textures/info/popup_lights_info.png",
+                type: "texture",
+            },
+            movementInfoText: {
+                url: "/textures/info/movement_info.png",
+                type: "texture",
+            },
         };
 
         Object.entries(this.toLoad).forEach(([name, data]) => {

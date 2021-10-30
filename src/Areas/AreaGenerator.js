@@ -8,6 +8,7 @@ export default class AreaGenerator {
         this.time = args.time;
         this.files = args.files;
         this.car = args.car;
+        this.camera = args.camera;
 
         this.object = new THREE.Object3D();
         this.areas = {};
@@ -20,6 +21,7 @@ export default class AreaGenerator {
             time: this.time,
             files: this.files,
             car: this.car,
+            camera: this.camera,
             position: { xOne: 3, yOne: 3, xTwo: 7, yTwo: 7 },
         });
         this.object.add(this.areas.photoShoot.object);

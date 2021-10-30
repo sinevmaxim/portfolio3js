@@ -17,7 +17,9 @@ export default class Club {
         this.object = new THREE.Object3D();
 
         this.initModel();
+        this.initLogo();
         this.initPhysicsObject();
+        this.initMusic();
     }
 
     initModel() {}
@@ -38,33 +40,41 @@ export default class Club {
 
         this.physics.world.add(this.body);
         this.object.add(this.hitbox);
-        this.files.on("clubMusic_ready", () => {
-            this.hitbox.add(this.files.items.clubMusic);
-            this.files.items.clubMusic.setRefDistance(60);
-            this.files.items.clubMusic.setVolume(0.3);
-            this.files.items.clubMusic.play();
-            this.files.items.clubMusic.setLoop(true);
+
+        this.body.addEventListener("collide", () => {
+            this.sound.house.collision.play();
         });
 
         this.position = new THREE.Vector3(this.positionX, this.positionY, 0);
-        // this.sound.music.play();
+    }
 
-        // this.physics.world.addEventListener("postStep", () => {
-        //     this.hitbox.position.copy(this.body.position);
-        //     this.hitbox.quaternion.copy(this.body.quaternion);
+    initLogo() {
+        this.plane = new THREE.PlaneBufferGeometry(10, 10, 1, 1);
 
-        //     this.sound.music.volume(
-        //         Math.min(
-        //             Math.max(
-        //                 0.07,
-        //                 14 /
-        //                     this.position.distanceTo(
-        //                         this.car.models.chassis.position
-        //                     )
-        //             ),
-        //             0.25
-        //         )
-        //     );
-        // });
+        this.logo = new THREE.Mesh(
+            this.plane,
+            new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                transparent: true,
+                alphaMap: this.files.items.clubLogo,
+                color: 0xff0000,
+            })
+        );
+
+        this.logo.rotation.x = Math.PI / 2;
+        this.logo.rotation.y = -Math.PI / 2;
+        this.logo.position.set(this.positionX, this.positionY, 13);
+
+        this.object.add(this.logo);
+    }
+
+    initMusic() {
+        this.files.on("clubMusic_ready", () => {
+            this.hitbox.add(this.files.items.clubMusic);
+            this.files.items.clubMusic.setRefDistance(60);
+            this.files.items.clubMusic.setVolume(0.15);
+            this.files.items.clubMusic.play();
+            this.files.items.clubMusic.setLoop(true);
+        });
     }
 }

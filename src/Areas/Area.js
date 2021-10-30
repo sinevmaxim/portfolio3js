@@ -13,17 +13,26 @@ export default class Area {
         this.object = new THREE.Object3D();
         this.in = false;
 
-        this.enterEvent = (event) => {
-            if (event.keyCode == 13) {
-                this.customEnterEvent();
-            }
-        };
+        // // field of view problem with this keyword
+        // this.enterEvent = (event) => {
+        //     if (event.keyCode == 13) {
+        //         this.customEnterEvent();
+        //     }
+        // };
 
+        this.initEvents();
         this.initFrame();
         this.initLogo();
         this.checkPosition();
     }
 
+    initEvents() {
+        this.enterEvent = (event) => {
+            if (event.keyCode == 13) {
+                this.customEnterEvent();
+            }
+        };
+    }
     initFrame() {
         this.frame = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(this.width, this.height, 1, 1),

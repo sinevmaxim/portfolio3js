@@ -61,7 +61,7 @@ export default class Physics {
         });
 
         this.floor.model = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(170, 170, 32, 32),
+            new THREE.PlaneBufferGeometry(200, 200, 2, 2),
             new THREE.MeshStandardMaterial({
                 map: this.files.items.floorTexture,
             })

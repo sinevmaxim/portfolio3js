@@ -4,15 +4,29 @@ import * as THREE from "three";
 export default class Sound {
     constructor() {
         Howler.volume(0.65);
-        // this.listener = new THREE.AudioListener();
         this.car = {};
+        this.tree = {};
+        this.house = {};
 
-        // this.music = new Howl({
-        //     src: ["/audio/music/music.mp3"],
-        //     volume: 0.1,
-        // //     volume: 0.4,
-        //     loop: true,
-        // });
+        this.music = new Howl({
+            src: ["/audio/music/music.mp3"],
+            volume: 0.1,
+        });
+
+        this.tree.collision = new Howl({
+            src: ["/audio/tree/tree_collision.wav"],
+            volume: 0.1,
+        });
+
+        this.house.collision = new Howl({
+            src: ["/audio/house/house_collision.mp3"],
+            volume: 0.1,
+        });
+
+        this.car.engineStart = new Howl({
+            src: ["/audio/car/car_engine_start.mp3"],
+            volume: 0.1,
+        });
 
         this.car.engine = new Howl({
             src: ["/audio/car/car_engine.mp3"],

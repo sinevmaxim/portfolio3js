@@ -8,7 +8,7 @@ export default class Car {
         this.files = args.files;
         this.sound = args.sound;
         this.light = args.light;
-        // this.controls = args.controls;
+        this.controls = args.controls;
 
         this.object = new THREE.Object3D();
         this.speed = 0;
@@ -16,13 +16,14 @@ export default class Car {
         this.initPhysics();
         this.initModels();
         this.initWheels();
-        this.updateAcceleration();
         this.initSound();
         this.initShadow();
         this.initLights();
         this.initAnimation();
-        // this.initControls();
+        this.initControls();
         this.initCollision();
+        this.updateAcceleration();
+        this.startStopEngine();
     }
 
     initModels() {
@@ -31,6 +32,9 @@ export default class Car {
         this.models.chassis = this.files.items.carChassis;
         this.models.chassis.scale.set(2, 2, 2);
         // this.models.wheel = this.files.items.carWheel;
+
+        this.object.add(this.models.chassis);
+
         this.time.on("tick", () => {
             this.models.chassis.position.set(
                 this.chassis.body.position.x,
@@ -40,7 +44,6 @@ export default class Car {
 
             this.models.chassis.quaternion.copy(this.chassis.body.quaternion);
         });
-        this.object.add(this.models.chassis);
     }
 
     updateAcceleration() {
@@ -83,10 +86,17 @@ export default class Car {
         // });
     }
 
-    initSound() {
+    enableEngineSound() {
         this.sound.car.engineHigh.play();
         this.sound.car.engine.play();
+    }
 
+    disableEngineSound() {
+        this.sound.car.engineHigh.stop();
+        this.sound.car.engine.stop();
+    }
+
+    initSound() {
         this.time.on("tick", () => {
             this.sound.car.engine.volume(
                 Math.max(0, 0.02 * ((40 - Math.abs(this.speed)) / 40))
@@ -104,12 +114,14 @@ export default class Car {
 
     initShadow() {
         this.shadow = this.files.items.carShadowTexture;
+
         this.shadowPlane = new THREE.PlaneBufferGeometry(10, 10, 1, 1);
         this.shadowMaterial = new THREE.MeshBasicMaterial({
             alphaMap: this.shadow,
             transparent: true,
             color: 0x000000,
         });
+
         this.shadowObject = new THREE.Mesh(
             this.shadowPlane,
             this.shadowMaterial
@@ -143,7 +155,6 @@ export default class Car {
         this.models.animation.popUpLights.clampWhenFinished = true;
         this.models.animation.popUpLights.enabled = true;
         this.models.animation.popUpLights.loop = THREE.LoopOnce;
-        // this.models.animation.popUpLights.setLoop(THREE.LoopRepeat, 1);
 
         document.addEventListener("keydown", (event) => {
             if (event.keyCode == 32) {
@@ -176,10 +187,8 @@ export default class Car {
         this.light.rightStopLight.position.set(-1.35, -0.4, 0.5);
 
         this.models.chassis.add(this.light.leftSpotLight);
-        // this.models.chassis.add(this.light.leftStopLight);
         this.models.chassis.add(this.light.leftSpotLight.target);
         this.models.chassis.add(this.light.rightSpotLight);
-        // this.models.chassis.add(this.light.rightStopLight);
         this.models.chassis.add(this.light.rightSpotLight.target);
 
         document.addEventListener("keydown", (event) => {
@@ -188,27 +197,16 @@ export default class Car {
                 this.light.rightSpotLight.visible = this.animationReverse;
             }
         });
-
-        // this.time.on("tick", () => {
-        //     if (this.speed > 0) {
-        //         this.light.leftStopLight.color.setHex(0xff0000);
-        //         this.light.rightStopLight.color.setHex(0xff0000);
-        //     } else {
-        //         this.light.leftStopLight.color.setHex(0xffffff);
-        //         this.light.rightStopLight.color.setHex(0xffffff);
-        //     }
-        // });
     }
 
     initPhysics() {
         this.chassis = {};
 
-        this.chassis.shape = new CANNON.Box(new CANNON.Vec3(3, 1.5, 1.2));
+        this.chassis.shape = new CANNON.Box(new CANNON.Vec3(3, 1.5, 1));
         this.chassis.body = new CANNON.Body({ mass: 465 });
         this.chassis.body.addShape(this.chassis.shape);
-        this.chassis.body.position.set(0, 0, 2);
+        this.chassis.body.position.set(0, 0, 1.6);
 
-        // Wheels options
         this.wheels = {};
         this.wheels.options = {
             radius: 0.32,
@@ -227,7 +225,6 @@ export default class Car {
             useCustomSlidingRotationalSpeed: true,
         };
 
-        // Create the vehicle
         this.vehicle = new CANNON.RaycastVehicle({
             chassisBody: this.chassis.body,
         });
@@ -257,7 +254,7 @@ export default class Car {
             );
 
             const wheelBody = new CANNON.Body({
-                // mass: 0,
+                mass: 0,
                 type: CANNON.Body.KINEMATIC,
                 collisionFilterGroup: 0, // turn off collisions
             });
@@ -278,7 +275,7 @@ export default class Car {
         });
 
         this.hitbox.chassis = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(3 * 2, 1.5 * 2, 1.2 * 2),
+            new THREE.BoxBufferGeometry(3 * 2, 1.5 * 2, 1 * 2),
             this.hitbox.material
         );
 
@@ -344,113 +341,13 @@ export default class Car {
         });
 
         this.options = {};
-        this.options.maxSteerVal = 0.3;
+        this.options.maxSteerVal = 0.33;
         this.options.maxForce = 450;
         this.options.maxForceMultiplier = 1;
         this.options.maxForceMultiplierBack = 1;
         this.options.brakeForce = 900;
         this.options.maxSpeed = 90;
-
-        const controlsHandler = (event) => {
-            const up = event.type == "keyup";
-
-            if (!up && event.type !== "keydown") {
-                return;
-            }
-
-            // this.speed = Math.max(
-            //     Math.min(this.vehicle.currentVehicleSpeedKmHour, 110),
-            //     -29
-            // );
-
-            // if (this.speed >= 0) {
-            //     this.options.maxForceMultiplier = Math.min(
-            //         Math.max(0, ((110 - this.speed) * 2.2) / 110),
-            //         1
-            //     );
-
-            //     // this.options.maxForceMultiplierBack = 3;
-            // } else {
-            //     // this.options.maxForceMultiplier = 1;
-            //     this.options.maxForceMultiplierBack =
-            //         (30 - Math.abs(this.speed)) / 30;
-            // }
-
-            this.vehicle.setBrake(0, 0);
-            this.vehicle.setBrake(0, 1);
-            this.vehicle.setBrake(0, 2);
-            this.vehicle.setBrake(0, 3);
-
-            switch (event.keyCode) {
-                case 38: // forward
-                    this.vehicle.applyEngineForce(
-                        up
-                            ? 0
-                            : -this.options.maxForce *
-                                  this.options.maxForceMultiplier,
-                        2
-                    );
-                    this.vehicle.applyEngineForce(
-                        up
-                            ? 0
-                            : -this.options.maxForce *
-                                  this.options.maxForceMultiplier,
-                        3
-                    );
-                    break;
-
-                case 40: // backward
-                    // this.light.leftStopLight.intensity = 20;
-                    // this.light.rightStopLight.intensity = 20;
-                    this.vehicle.applyEngineForce(
-                        up
-                            ? 0
-                            : this.options.maxForce *
-                                  this.options.maxForceMultiplierBack,
-                        2
-                    );
-                    this.vehicle.applyEngineForce(
-                        up
-                            ? 0
-                            : this.options.maxForce *
-                                  this.options.maxForceMultiplierBack,
-                        3
-                    );
-                    break;
-
-                // case 66: // b
-                //     // this.vehicle.setBrake(this.options.brakeForce, 0);
-                //     // this.vehicle.setBrake(this.options.brakeForce, 1);
-                //     this.vehicle.setBrake(this.options.brakeForce, 2);
-                //     this.vehicle.setBrake(this.options.brakeForce, 3);
-                //     break;
-
-                case 39: // right
-                    this.vehicle.setSteeringValue(
-                        up ? 0 : -this.options.maxSteerVal,
-                        0
-                    );
-                    this.vehicle.setSteeringValue(
-                        up ? 0 : -this.options.maxSteerVal,
-                        1
-                    );
-                    break;
-
-                case 37: // left
-                    this.vehicle.setSteeringValue(
-                        up ? 0 : this.options.maxSteerVal,
-                        0
-                    );
-                    this.vehicle.setSteeringValue(
-                        up ? 0 : this.options.maxSteerVal,
-                        1
-                    );
-                    break;
-            }
-        };
-
-        document.addEventListener("keydown", controlsHandler);
-        document.addEventListener("keyup", controlsHandler);
+        this.options.maxReverseSpeed = 30;
     }
 
     initCollision() {
@@ -459,63 +356,80 @@ export default class Car {
         });
     }
 
-    // initControls() {
-    //     this.time.on("tick", () => {
-    //         if (this.controls.action.forward) {
-    //             this.vehicle.applyEngineForce(
-    //                 this.up
-    //                     ? 0
-    //                     : -this.options.maxForce *
-    //                           this.options.maxForceMultiplier,
-    //                 2
-    //             );
-    //             this.vehicle.applyEngineForce(
-    //                 this.up
-    //                     ? 0
-    //                     : -this.options.maxForce *
-    //                           this.options.maxForceMultiplier,
-    //                 3
-    //             );
-    //         }
-    //         if (this.controls.action.back) {
-    //             this.light.leftStopLight.intensity = 20;
-    //             this.light.rightStopLight.intensity = 20;
+    setControls() {
+        this.time.on("tick", this.controlCar);
+    }
 
-    //             this.vehicle.applyEngineForce(
-    //                 this.up
-    //                     ? 0
-    //                     : this.options.maxForce *
-    //                           this.options.maxForceMultiplierBack,
-    //                 2
-    //             );
-    //             this.vehicle.applyEngineForce(
-    //                 this.up
-    //                     ? 0
-    //                     : this.options.maxForce *
-    //                           this.options.maxForceMultiplierBack,
-    //                 3
-    //             );
-    //         }
-    //         if (this.controls.action.right) {
-    //             this.vehicle.setSteeringValue(
-    //                 this.up ? 0 : -this.options.maxSteerVal,
-    //                 0
-    //             );
-    //             this.vehicle.setSteeringValue(
-    //                 this.up ? 0 : -this.options.maxSteerVal,
-    //                 1
-    //             );
-    //         }
-    //         if (this.controls.action.left) {
-    //             this.vehicle.setSteeringValue(
-    //                 this.up ? 0 : this.options.maxSteerVal,
-    //                 0
-    //             );
-    //             this.vehicle.setSteeringValue(
-    //                 this.up ? 0 : this.options.maxSteerVal,
-    //                 1
-    //             );
-    //         }
-    //     });
-    // }
+    unsetControls() {
+        this.time.off("tick", this.controlCar);
+    }
+
+    initControls() {
+        this.controlCar = () => {
+            let forceValue = 0;
+            let steerValue = 0;
+            this.options.maxForceMultiplier =
+                this.speed > 0
+                    ? (this.options.maxSpeed - this.speed) /
+                      this.options.maxSpeed
+                    : (this.options.maxReverseSpeed + this.speed) /
+                      this.options.maxReverseSpeed;
+
+            if (this.controls.action.forward) {
+                forceValue =
+                    -this.options.maxForce * this.options.maxForceMultiplier;
+            }
+
+            if (this.controls.action.back) {
+                forceValue =
+                    this.options.maxForce * this.options.maxForceMultiplier;
+            }
+
+            if (this.controls.action.right) {
+                steerValue = -this.options.maxSteerVal;
+            }
+
+            if (this.controls.action.left) {
+                steerValue = this.options.maxSteerVal;
+            }
+
+            this.vehicle.applyEngineForce(forceValue, 2);
+            this.vehicle.applyEngineForce(forceValue, 3);
+            this.vehicle.setSteeringValue(steerValue, 0);
+            this.vehicle.setSteeringValue(steerValue, 1);
+        };
+    }
+
+    startStopEngine() {
+        this.engineTurnOn = () => {
+            if (this.controls.action.engine) {
+                this.startEngine();
+                this.time.off("tick", this.engineTurnOn);
+            }
+        };
+
+        this.time.on("tick", this.engineTurnOn);
+    }
+
+    startEngine() {
+        this.enableEngineSound();
+        this.setControls();
+    }
+    stopEngine() {
+        this.disableEngineSound();
+        this.unsetControls();
+    }
+
+    photoshoot() {
+        this.chassis.body.position.set(
+            this.chassis.body.position.x,
+            this.chassis.body.position.y,
+            1.6
+        );
+
+        this.unsetControls();
+
+        this.vehicle.setBrake(this.options.brakeForce, 2);
+        this.vehicle.setBrake(this.options.brakeForce, 3);
+    }
 }

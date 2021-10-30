@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import * as TWEEN from "@tweenjs/tween.js";
 
 export default class Camera {
     constructor(args) {
@@ -11,6 +12,23 @@ export default class Camera {
         this.object = new THREE.Object3D();
 
         this.initCamera();
+        this.initEvents();
+    }
+    initEvents() {
+        this.updateCamera = () => {
+            this.cameraInstance.position.set(
+                this.car.chassis.body.position.x - this.offsetX,
+                this.car.chassis.body.position.y - this.offsetY,
+                this.car.chassis.body.position.z + this.offsetZ
+            );
+            this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
+        };
+
+        this.observeCar = () => {
+            this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
+        };
+
+        this.startUpdatingCamera();
     }
 
     initCamera() {
@@ -35,14 +53,93 @@ export default class Camera {
             this.cameraInstance.aspect = this.sizes.width / this.sizes.height;
             this.cameraInstance.updateProjectionMatrix();
         });
+    }
 
-        this.time.on("tick", () => {
-            this.cameraInstance.position.set(
-                this.car.chassis.body.position.x - this.offsetX,
-                this.car.chassis.body.position.y - this.offsetY,
-                this.car.chassis.body.position.z + this.offsetZ
-            );
-            this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
-        });
+    stopUpdatingCamera() {
+        this.time.off("tick", this.updateCamera);
+    }
+
+    startUpdatingCamera() {
+        this.time.on("tick", this.updateCamera);
+    }
+
+    startObservingCar() {
+        this.time.on("tick", this.observeCar);
+    }
+    stopObservingCar() {
+        this.time.off("tick", this.observeCar);
+    }
+
+    startPhotoshoot() {
+        this.stopUpdatingCamera();
+        setTimeout(() => {
+            this.startUpdatingCamera;
+        }, 3000);
+
+        this.tweenPosition1 = new TWEEN.Tween(this.cameraInstance.position)
+            .to(
+                {
+                    x: this.car.chassis.body.position.x - 5,
+                    y: this.car.chassis.body.position.y - 5,
+                    z: 1,
+                },
+                1000
+            )
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start()
+            .delay(1000);
+        this.tweenPosition2 = new TWEEN.Tween(this.cameraInstance.position)
+            .to(
+                {
+                    x: this.car.chassis.body.position.x - 7,
+                    y: this.car.chassis.body.position.y + 10,
+                    z: 1,
+                },
+                1000
+            )
+            .easing(TWEEN.Easing.Cubic.InOut);
+
+        this.tweenPositionFinish = new TWEEN.Tween(this.cameraInstance.position)
+            .to(
+                {
+                    x: this.car.chassis.body.position.x - this.offsetX,
+                    y: this.car.chassis.body.position.y - this.offsetY,
+                    z: this.car.chassis.body.position.z + this.offsetZ,
+                },
+                1000
+            )
+            .easing(TWEEN.Easing.Cubic.InOut);
+
+        this.tweenRotation1 = new TWEEN.Tween(this.cameraInstance.rotation)
+            .to(
+                {
+                    x: Math.PI / 2,
+                    y: -Math.PI * 0.3,
+                    z: 0,
+                },
+                1000
+            )
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start()
+            .delay(1000);
+        this.tweenRotation2 = new TWEEN.Tween(this.cameraInstance.rotation)
+            .to(
+                {
+                    x: Math.PI / 2,
+                    y: -Math.PI * 0.7,
+                    z: 0,
+                },
+                1000
+            )
+            .easing(TWEEN.Easing.Cubic.InOut);
+
+        this.tweenRotationFinish = new TWEEN.Tween(this.cameraInstance.rotation)
+            .to({ x: Math.PI / 2, y: 0, z: 0 }, 1000)
+            .easing(TWEEN.Easing.Cubic.InOut);
+
+        this.tweenRotation1.chain(this.tweenRotation2);
+        this.tweenRotation2.chain(this.tweenPositionFinish);
+        this.tweenPosition1.chain(this.tweenPosition2);
+        this.tweenPosition2.chain(this.tweenRotationFinish);
     }
 }

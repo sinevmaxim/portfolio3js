@@ -10,6 +10,7 @@ export default class PalmTree {
         this.geometry = args.geometry;
         this.material = args.material;
         this.shape = args.shape;
+        this.sound = args.sound;
 
         this.object = new THREE.Object3D();
 
@@ -34,7 +35,7 @@ export default class PalmTree {
         this.object.add(this.hitbox);
 
         this.body.addEventListener("collide", () => {
-            console.log("Collided");
+            this.sound.tree.collision.play();
         });
 
         this.physics.world.addEventListener("postStep", () => {

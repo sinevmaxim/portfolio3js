@@ -6,6 +6,7 @@ export default class PalmTreeGenerator {
     constructor(args) {
         this.physics = args.physics;
         this.files = args.files;
+        this.sound = args.sound;
         this.ammount = args.ammount;
 
         this.object = new THREE.Group();
@@ -29,6 +30,7 @@ export default class PalmTreeGenerator {
                 geometry: this.geometry,
                 material: this.material,
                 shape: this.shape,
+                sound: this.sound,
             });
 
             this.trees.push(tree.object);

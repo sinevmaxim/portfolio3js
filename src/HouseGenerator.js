@@ -41,6 +41,7 @@ export default class HouseGenerator {
                 geometry: this.geometry,
                 material: this.material,
                 shape: this.shape,
+                sound: this.sound,
             });
 
             this.houses.push(house.object);
