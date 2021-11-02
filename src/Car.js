@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import * as CANNON from "cannon";
+import * as TWEEN from "@tweenjs/tween.js";
 
 export default class Car {
     constructor(args) {
@@ -49,21 +50,6 @@ export default class Car {
     updateAcceleration() {
         this.physics.world.addEventListener("postStep", () => {
             this.speed = this.vehicle.currentVehicleSpeedKmHour;
-
-            // if (this.speed >= 0) {
-            //     this.options.maxForceMultiplier = Math.max(
-            //         0,
-            //         ((this.options.maxSpeed - this.speed) * 2.2) /
-            //             this.options.maxSpeed
-            //     );
-            //     this.options.maxForceMultiplierBack = 3;
-            //     return;
-            // }
-            // if (this.speed < 0) {
-            //     // this.options.maxForceMultiplier = 1;
-            //     this.options.maxForceMultiplierBack =
-            //         (30 - Math.abs(this.speed)) / 30;
-            // }
         });
     }
 
@@ -344,7 +330,6 @@ export default class Car {
         this.options.maxSteerVal = 0.33;
         this.options.maxForce = 450;
         this.options.maxForceMultiplier = 1;
-        this.options.maxForceMultiplierBack = 1;
         this.options.brakeForce = 900;
         this.options.maxSpeed = 90;
         this.options.maxReverseSpeed = 30;
@@ -403,6 +388,7 @@ export default class Car {
     startStopEngine() {
         this.engineTurnOn = () => {
             if (this.controls.action.engine) {
+                this.sound.car.engineStart.play();
                 this.startEngine();
                 this.time.off("tick", this.engineTurnOn);
             }
@@ -415,6 +401,7 @@ export default class Car {
         this.enableEngineSound();
         this.setControls();
     }
+
     stopEngine() {
         this.disableEngineSound();
         this.unsetControls();
@@ -428,8 +415,15 @@ export default class Car {
         );
 
         this.unsetControls();
+        this.putOnHandbrake();
+    }
 
+    putOnHandbrake() {
         this.vehicle.setBrake(this.options.brakeForce, 2);
         this.vehicle.setBrake(this.options.brakeForce, 3);
+    }
+    removeFromHandbrake() {
+        this.vehicle.setBrake(0, 2);
+        this.vehicle.setBrake(0, 3);
     }
 }

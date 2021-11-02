@@ -14,11 +14,21 @@ export default class PalmTree {
 
         this.object = new THREE.Object3D();
 
-        this.initModel();
         this.initPhysicsObject();
+        this.initModel();
     }
 
-    initModel() {}
+    initModel() {
+        this.model = this.files.items.firstPalmTree.clone();
+        this.model.scale.set(2, 2, 1);
+        this.model.castShadow = true;
+        this.model.receiveShadow = true;
+        this.model.position.set(this.positionX, this.positionY, 0);
+
+        console.log(this.model.position);
+
+        this.object.add(this.model);
+    }
     initPhysicsObject() {
         this.body = new CANNON.Body({ mass: 0 });
         this.body.addShape(this.shape);
@@ -28,19 +38,19 @@ export default class PalmTree {
         this.hitbox.receiveShadow = true;
         this.hitbox.castShadow = true;
 
-        this.body.position.set(this.positionX, this.positionY, 10);
+        this.body.position.set(this.positionX, this.positionY, 0);
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);
-        this.object.add(this.hitbox);
+        // this.object.add(this.hitbox);
 
         this.body.addEventListener("collide", () => {
             this.sound.tree.collision.play();
         });
 
-        this.physics.world.addEventListener("postStep", () => {
-            this.hitbox.position.copy(this.body.position);
-            this.hitbox.quaternion.copy(this.body.quaternion);
-        });
+        // this.physics.world.addEventListener("postStep", () => {
+        //     this.hitbox.position.copy(this.body.position);
+        //     this.hitbox.quaternion.copy(this.body.quaternion);
+        // });
     }
 }

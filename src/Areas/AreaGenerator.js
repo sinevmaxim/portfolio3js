@@ -2,6 +2,7 @@ import GithubArea from "./GithubArea";
 import LinkedInArea from "./LinkedInArea";
 import PhotoShootArea from "./PhotoShootArea";
 import * as THREE from "three";
+import TwitterArea from "./TwitterArea";
 
 export default class AreaGenerator {
     constructor(args) {
@@ -41,5 +42,13 @@ export default class AreaGenerator {
             position: { xOne: -3, yOne: -3, xTwo: 3, yTwo: 3 },
         });
         this.object.add(this.areas.linkedInArea.object);
+
+        this.areas.twitterArea = new TwitterArea({
+            time: this.time,
+            files: this.files,
+            car: this.car,
+            position: { xOne: -20, yOne: -20, xTwo: -15, yTwo: -15 },
+        });
+        this.object.add(this.areas.twitterArea.object);
     }
 }

@@ -3,7 +3,7 @@ import InfoTextGenerator from "./InfoTextGenerator";
 import PalmTreeGenerator from "./PalmTreeGenerator";
 import HouseGenerator from "./HouseGenerator";
 
-export default class LandscapeGenerator {
+export default class Landscape {
     constructor(args) {
         this.sound = args.sound;
         this.physics = args.physics;

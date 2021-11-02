@@ -29,13 +29,20 @@ export default class FileEventEmmiter extends EventEmmiter {
                 type: "model",
             },
             // carWheel: { url: "/models/car/wheel.glb", type: "model" },
-            floorTexture: { url: "/textures/floor/floor.png", type: "texture" },
+            floorTexture: {
+                url: "/textures/floor/floor.png",
+                type: "texture",
+            },
             githubLogo: {
                 url: "/textures/logos/github_logo.png",
                 type: "texture",
             },
             linkedInLogo: {
                 url: "/textures/logos/linkedin_logo.png",
+                type: "texture",
+            },
+            twitterLogo: {
+                url: "/textures/logos/twitter_logo.png",
                 type: "texture",
             },
             carShadowTexture: {
@@ -73,6 +80,14 @@ export default class FileEventEmmiter extends EventEmmiter {
             movementInfoText: {
                 url: "/textures/info/movement_info.png",
                 type: "texture",
+            },
+            firstPalmTree: {
+                url: "/models/PalmTree.glb",
+                type: "model",
+            },
+            secondPalmTree: {
+                url: "/models/PalmTree2.glb",
+                type: "model",
             },
         };
 

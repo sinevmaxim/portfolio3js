@@ -42,7 +42,7 @@ export default class Physics {
                     friction: 0.3,
                     restitution: 0.5,
                     contactEquationStiffness: 1000,
-                    contactEquationRelaxation: 4000,
+                    contactEquationRelaxation: 10000,
                 }
             );
 

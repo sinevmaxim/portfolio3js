@@ -72,9 +72,6 @@ export default class Camera {
 
     startPhotoshoot() {
         this.stopUpdatingCamera();
-        setTimeout(() => {
-            this.startUpdatingCamera;
-        }, 3000);
 
         this.tweenPosition1 = new TWEEN.Tween(this.cameraInstance.position)
             .to(
@@ -83,7 +80,7 @@ export default class Camera {
                     y: this.car.chassis.body.position.y - 5,
                     z: 1,
                 },
-                1000
+                2000
             )
             .easing(TWEEN.Easing.Cubic.InOut)
             .start()
@@ -95,20 +92,26 @@ export default class Camera {
                     y: this.car.chassis.body.position.y + 10,
                     z: 1,
                 },
-                1000
+                2000
             )
             .easing(TWEEN.Easing.Cubic.InOut);
 
-        this.tweenPositionFinish = new TWEEN.Tween(this.cameraInstance.position)
-            .to(
-                {
-                    x: this.car.chassis.body.position.x - this.offsetX,
-                    y: this.car.chassis.body.position.y - this.offsetY,
-                    z: this.car.chassis.body.position.z + this.offsetZ,
-                },
-                1000
-            )
-            .easing(TWEEN.Easing.Cubic.InOut);
+        // this.tweenPositionFinish = new TWEEN.Tween(this.cameraInstance.position)
+        //     .to(
+        //         {
+        //             x: this.car.chassis.body.position.x - this.offsetX,
+        //             y: this.car.chassis.body.position.y - this.offsetY,
+        //             z: this.car.chassis.body.position.z + this.offsetZ,
+        //         },
+        //         1000
+        //     )
+        //     .easing(TWEEN.Easing.Cubic.InOut);
+
+        this.onTweenFinish = () => {
+            this.startUpdatingCamera();
+            this.car.setControls();
+            this.car.removeFromHandbrake();
+        };
 
         this.tweenRotation1 = new TWEEN.Tween(this.cameraInstance.rotation)
             .to(
@@ -117,7 +120,7 @@ export default class Camera {
                     y: -Math.PI * 0.3,
                     z: 0,
                 },
-                1000
+                2000
             )
             .easing(TWEEN.Easing.Cubic.InOut)
             .start()
@@ -129,17 +132,19 @@ export default class Camera {
                     y: -Math.PI * 0.7,
                     z: 0,
                 },
-                1000
+                2000
             )
-            .easing(TWEEN.Easing.Cubic.InOut);
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onComplete(this.onTweenFinish);
 
-        this.tweenRotationFinish = new TWEEN.Tween(this.cameraInstance.rotation)
-            .to({ x: Math.PI / 2, y: 0, z: 0 }, 1000)
-            .easing(TWEEN.Easing.Cubic.InOut);
+        // this.tweenRotationFinish = new TWEEN.Tween(this.cameraInstance.rotation)
+        //     .to({ x: Math.PI / 2, y: 0, z: 0 }, 1000)
+        //     .easing(TWEEN.Easing.Cubic.InOut)
+        // .onComplete(this.onTweenFinish);
 
         this.tweenRotation1.chain(this.tweenRotation2);
-        this.tweenRotation2.chain(this.tweenPositionFinish);
+        // this.tweenRotation2.chain(this.tweenPositionFinish);
         this.tweenPosition1.chain(this.tweenPosition2);
-        this.tweenPosition2.chain(this.tweenRotationFinish);
+        // this.tweenPosition2.chain(this.tweenRotationFinish);
     }
 }

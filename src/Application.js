@@ -8,13 +8,10 @@ import Light from "./Light";
 import Sound from "./Sound";
 import AreaGenerator from "./Areas/AreaGenerator";
 import FileEventEmmiter from "./Events/FileEventEmmiter";
-import HouseGenerator from "./HouseGenerator";
-import PalmTreeGenerator from "./PalmTreeGenerator";
 import Controls from "./Events/Controls";
 import Effects from "./Effects";
-import InfoTextGenerator from "./InfoTextGenerator";
-import LandscapeGenerator from "./LandscapeGenerator";
 import Environment from "./Environment";
+import Landscape from "./Landscape";
 
 export default class Application {
     constructor(args) {
@@ -36,9 +33,6 @@ export default class Application {
             this.initCar();
             this.initCamera();
             this.initAreas();
-            // this.initHouses();
-            // this.initPalmTrees();
-            // this.initInfo();
             this.initEnvironment();
             this.initLandscape();
             this.initRender();
@@ -55,17 +49,16 @@ export default class Application {
             canvas: this.canvas,
             // alpha: true,
         });
-        // this.renderer.setClearColor(0x414141, 1)
-        // this.renderer.setClearColor(0x000000, 1);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        // this.renderer.setPixelRatio(2);
         this.renderer.setSize(this.sizes.width, this.sizes.height);
-        // this.renderer.physicallyCorrectLights = true;
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.autoClear = false;
+        // this.renderer.setClearColor(0x414141, 1)
+        // this.renderer.setClearColor(0x000000, 1);
+        // this.renderer.physicallyCorrectLights = true;
         // this.renderer.gammaFactor = 2.2;
         // this.renderer.gammaOutPut = true;
-        this.renderer.autoClear = false;
 
         // Resize event
         window.addEventListener("resize", () => {
@@ -146,14 +139,14 @@ export default class Application {
     }
 
     initLandscape() {
-        this.landscapeGenerator = new LandscapeGenerator({
+        this.landscape = new Landscape({
             physics: this.physics,
             files: this.files,
             sound: this.sound,
             car: this.car,
         });
 
-        this.scene.add(this.landscapeGenerator.object);
+        this.scene.add(this.landscape.object);
     }
 
     // initHouses() {

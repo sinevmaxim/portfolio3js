@@ -25,7 +25,8 @@ export default class Sound {
 
         this.car.engineStart = new Howl({
             src: ["/audio/car/car_engine_start.mp3"],
-            volume: 0.1,
+            volume: 0.25,
+            loop: false,
         });
 
         this.car.engine = new Howl({
