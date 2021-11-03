@@ -46,6 +46,9 @@ export default class Controls {
                     this.action.engine = false;
                     break;
             }
+            !this.action.forward && !this.action.back
+                ? (this.action.movementIdle = true)
+                : (this.action.movementIdle = false);
         };
 
         document.addEventListener("keydown", this.keyDownEvent);

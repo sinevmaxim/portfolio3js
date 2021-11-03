@@ -45,6 +45,10 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/textures/logos/twitter_logo.png",
                 type: "texture",
             },
+            sketchfabLogo: {
+                url: "/textures/logos/sketchfab_logo.png",
+                type: "texture",
+            },
             carShadowTexture: {
                 url: "/textures/car/carShadowTexture.jpg",
                 type: "texture",

@@ -3,6 +3,7 @@ import LinkedInArea from "./LinkedInArea";
 import PhotoShootArea from "./PhotoShootArea";
 import * as THREE from "three";
 import TwitterArea from "./TwitterArea";
+import SketchfabArea from "./SketchfabArea";
 
 export default class AreaGenerator {
     constructor(args) {
@@ -50,5 +51,13 @@ export default class AreaGenerator {
             position: { xOne: -20, yOne: -20, xTwo: -15, yTwo: -15 },
         });
         this.object.add(this.areas.twitterArea.object);
+
+        this.areas.sketchfabArea = new SketchfabArea({
+            time: this.time,
+            files: this.files,
+            car: this.car,
+            position: { xOne: -30, yOne: -30, xTwo: -25, yTwo: -25 },
+        });
+        this.object.add(this.areas.sketchfabArea.object);
     }
 }

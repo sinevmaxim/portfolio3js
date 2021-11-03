@@ -256,7 +256,7 @@ export default class Car {
         this.hitbox = {};
 
         this.hitbox.material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0x000000,
             wireframe: true,
         });
 
@@ -353,21 +353,36 @@ export default class Car {
         this.controlCar = () => {
             let forceValue = 0;
             let steerValue = 0;
-            this.options.maxForceMultiplier =
-                this.speed > 0
-                    ? (this.options.maxSpeed - this.speed) /
-                      this.options.maxSpeed
-                    : (this.options.maxReverseSpeed + this.speed) /
-                      this.options.maxReverseSpeed;
+            if (this.speed > 0) {
+                this.options.maxForceMultiplier =
+                    (this.options.maxSpeed - this.speed) /
+                    this.options.maxSpeed;
+                this.isReverse = false;
+            } else {
+                this.options.maxForceMultiplier =
+                    (this.options.maxReverseSpeed + this.speed) /
+                    this.options.maxReverseSpeed;
+                this.isReverse = true;
+            }
 
             if (this.controls.action.forward) {
                 forceValue =
                     -this.options.maxForce * this.options.maxForceMultiplier;
+                this.hitbox.material.color.setHex(0x000000);
+                this.hitbox.material.needsUpdate = true;
+            }
+            if (this.controls.action.movementIdle) {
+                this.hitbox.material.color.setHex(0x000000);
+                this.hitbox.material.needsUpdate = true;
             }
 
             if (this.controls.action.back) {
                 forceValue =
                     this.options.maxForce * this.options.maxForceMultiplier;
+                !this.isReverse
+                    ? this.hitbox.material.color.setHex(0xff0000)
+                    : this.hitbox.material.color.setHex(0xffffff);
+                this.hitbox.material.needsUpdate = true;
             }
 
             if (this.controls.action.right) {
