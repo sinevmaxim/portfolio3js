@@ -52,21 +52,18 @@ export default class Area {
         this.object.add(this.frame);
     }
 
-    // Function to override
     customTriggerIn() {
         throw new Error(
             "Abstract function error: This function must be overriden"
         );
     }
 
-    // Function to override
     customTriggerOut() {
         throw new Error(
             "Abstract function error: This function must be overriden"
         );
     }
 
-    // Function to override
     customEnterEvent() {
         throw new Error(
             "Abstract function error: This function must be overriden"

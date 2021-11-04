@@ -17,15 +17,15 @@ export default class Camera {
     initEvents() {
         this.updateCamera = () => {
             this.cameraInstance.position.set(
-                this.car.chassis.body.position.x - this.offsetX,
-                this.car.chassis.body.position.y - this.offsetY,
-                this.car.chassis.body.position.z + this.offsetZ
+                this.car.oldPosition.x - this.offsetX,
+                this.car.oldPosition.y - this.offsetY,
+                this.car.oldPosition.z + this.offsetZ
             );
-            this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
+            this.cameraInstance.lookAt(this.car.oldPosition);
         };
 
         this.observeCar = () => {
-            this.cameraInstance.lookAt(this.car.hitbox.chassis.position);
+            this.cameraInstance.lookAt(this.car.oldPosition);
         };
 
         this.startUpdatingCamera();

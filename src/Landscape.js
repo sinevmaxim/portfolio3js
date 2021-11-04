@@ -2,9 +2,11 @@ import * as THREE from "three";
 import InfoTextGenerator from "./InfoTextGenerator";
 import PalmTreeGenerator from "./PalmTreeGenerator";
 import HouseGenerator from "./HouseGenerator";
+import CollectableGenerator from "./Collectable/CollectableGenerator";
 
 export default class Landscape {
     constructor(args) {
+        this.time = args.time;
         this.sound = args.sound;
         this.physics = args.physics;
         this.files = args.files;
@@ -19,6 +21,7 @@ export default class Landscape {
         this.initInfo();
         this.initPalmTrees();
         this.initHouses();
+        this.initCollectables();
     }
 
     initInfo() {
@@ -51,5 +54,17 @@ export default class Landscape {
         });
 
         this.object.add(this.houseGenerator.object);
+    }
+
+    initCollectables() {
+        this.collectableGenerator = new CollectableGenerator({
+            files: this.files,
+            physics: this.physics,
+            sound: this.sound,
+            car: this.car,
+            time: this.time,
+        });
+
+        this.object.add(this.collectableGenerator.object);
     }
 }

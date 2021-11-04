@@ -25,8 +25,6 @@ export default class PalmTree {
         this.model.receiveShadow = true;
         this.model.position.set(this.positionX, this.positionY, 0);
 
-        console.log(this.model.position);
-
         this.object.add(this.model);
     }
     initPhysicsObject() {

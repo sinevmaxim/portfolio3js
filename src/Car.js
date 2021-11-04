@@ -23,7 +23,7 @@ export default class Car {
         this.initAnimation();
         this.initControls();
         this.initCollision();
-        this.updateAcceleration();
+        this.updatePositionData();
         this.startStopEngine();
     }
 
@@ -47,9 +47,18 @@ export default class Car {
         });
     }
 
-    updateAcceleration() {
+    updatePositionData() {
         this.physics.world.addEventListener("postStep", () => {
             this.speed = this.vehicle.currentVehicleSpeedKmHour;
+
+            this.oldPosition = this.position || new THREE.Vector3(0, 0, 0);
+            this.position = this.hitbox.chassis.position.clone();
+
+            this.velocityVector = new THREE.Vector3(
+                this.position.x - this.oldPosition.x,
+                this.position.y - this.oldPosition.y,
+                this.position.z - this.oldPosition.z
+            );
         });
     }
 
@@ -365,13 +374,14 @@ export default class Car {
                 this.isReverse = true;
             }
 
-            if (this.controls.action.forward) {
-                forceValue =
-                    -this.options.maxForce * this.options.maxForceMultiplier;
+            if (this.controls.action.movementIdle) {
                 this.hitbox.material.color.setHex(0x000000);
                 this.hitbox.material.needsUpdate = true;
             }
-            if (this.controls.action.movementIdle) {
+
+            if (this.controls.action.forward) {
+                forceValue =
+                    -this.options.maxForce * this.options.maxForceMultiplier;
                 this.hitbox.material.color.setHex(0x000000);
                 this.hitbox.material.needsUpdate = true;
             }

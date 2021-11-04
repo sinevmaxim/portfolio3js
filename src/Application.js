@@ -144,6 +144,7 @@ export default class Application {
             files: this.files,
             sound: this.sound,
             car: this.car,
+            time: this.time,
         });
 
         this.scene.add(this.landscape.object);
