@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import * as TWEEN from "@tweenjs/tween.js";
 import TimeEventEmmiter from "./Events/TimeEventEmmiter";
-import Car from "./Car";
+import ClientCar from "./ClientCar";
 import Physics from "./Physics";
 import Camera from "./Camera";
 import Light from "./Light";
@@ -12,6 +12,7 @@ import Controls from "./Events/Controls";
 import Effects from "./Effects";
 import Environment from "./Environment";
 import Landscape from "./Landscape";
+import OtherCar from "./Car";
 
 export default class Application {
     constructor(args) {
@@ -35,6 +36,7 @@ export default class Application {
             this.initAreas();
             this.initEnvironment();
             this.initLandscape();
+            this.initOtherCar();
             this.initRender();
             // this.initEffects();
         });
@@ -83,13 +85,14 @@ export default class Application {
     }
 
     initCar() {
-        this.car = new Car({
+        this.car = new ClientCar({
             time: this.time,
             physics: this.physics,
             files: this.files,
             sound: this.sound,
             light: this.light,
             controls: this.controls,
+            startingPosition: { x: 0, y: 0, z: 1.6 },
         });
         this.scene.add(this.car.object);
     }
@@ -150,29 +153,17 @@ export default class Application {
         this.scene.add(this.landscape.object);
     }
 
-    // initHouses() {
-    //     this.houseGenerator = new HouseGenerator({
-    // physics: this.physics,
-    // files: this.files,
-    // sound: this.sound,
-    // car: this.car,
-    //         // time: this.time,
-    //         ammount: 5,
-    //     });
+    initOtherCar() {
+        this.otherCar = new OtherCar({
+            time: this.time,
+            physics: this.physics,
+            files: this.files,
+            sound: this.sound,
+            startingPosition: { x: -50, y: -20, z: 1.6 },
+        });
 
-    //     this.scene.add(this.houseGenerator.object);
-    // }
-
-    // initPalmTrees() {
-    //     this.palmTreeGenerator = new PalmTreeGenerator({
-    //         physics: this.physics,
-    //         files: this.files,
-    //         sound: this.sound,
-    //         ammount: 10,
-    //     });
-
-    //     this.scene.add(this.palmTreeGenerator.object);
-    // }
+        this.scene.add(this.otherCar.object);
+    }
 
     initEnvironment() {
         this.environment = new Environment({

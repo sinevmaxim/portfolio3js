@@ -26,7 +26,7 @@ export default class Physics {
         // this.world.broadphase = new CANNON.NaiveBroadphase();
         // this.world.broadphase.useBoundingBoxes = true;
         this.world.gravity.set(0, 0, -9.3);
-        this.world.defaultContactMaterial.friction = 0.01;
+        this.world.defaultContactMaterial.friction = 0.1;
     }
 
     initMaterial() {

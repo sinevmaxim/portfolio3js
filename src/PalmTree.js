@@ -25,7 +25,7 @@ export default class PalmTree {
         this.model.receiveShadow = true;
         this.model.position.set(this.positionX, this.positionY, 0);
 
-        this.object.add(this.model);
+        // this.object.add(this.model);
     }
     initPhysicsObject() {
         this.body = new CANNON.Body({ mass: 0 });
@@ -40,7 +40,7 @@ export default class PalmTree {
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);
-        // this.object.add(this.hitbox);
+        this.object.add(this.hitbox);
 
         this.body.addEventListener("collide", () => {
             this.sound.tree.collision.play();

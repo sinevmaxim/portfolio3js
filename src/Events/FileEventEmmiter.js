@@ -25,7 +25,7 @@ export default class FileEventEmmiter extends EventEmmiter {
     load() {
         this.toLoad = {
             carChassis: {
-                url: "/models/car/countach.glb",
+                url: "/models/car/countach3lowpoly.glb",
                 type: "model",
             },
             // carWheel: { url: "/models/car/wheel.glb", type: "model" },
