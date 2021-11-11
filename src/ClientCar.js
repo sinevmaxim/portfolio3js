@@ -147,7 +147,7 @@ export default class ClientCar extends Car {
         this.time.on("tick", () => {
             this.shadowObject.position.set(
                 this.chassis.body.position.x,
-                this.chassis.body.position.y + 0.2,
+                this.chassis.body.position.y - 1,
                 0.02
             );
 

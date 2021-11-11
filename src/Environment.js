@@ -14,7 +14,7 @@ export default class Environment {
         this.object.matrixAutoUpdate = false;
 
         this.initEnvironment();
-        // this.updatePosition();
+        this.updateSun();
     }
 
     initEnvironment() {
@@ -27,11 +27,18 @@ export default class Environment {
         this.environment = new THREE.Mesh(this.geometry, this.material);
         this.environment.frustumCulled = false;
 
-        this.sunGeometry = new THREE.SphereBufferGeometry(10, 256, 256);
+        this.sunGeometry = new THREE.PlaneBufferGeometry(10, 10, 10, 10);
         this.sunMaterial = new THREE.ShaderMaterial({
             vertexShader: sunVertexShader,
             fragmentShader: sunFragmentShader,
+            side: THREE.DoubleSide,
+            uniforms: {
+                uTime: { value: 0 },
+            },
+            transparent: true,
         });
+
+        console.log(this.sunMaterial);
 
         this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
         this.sun.position.set(0, 212, 60);
@@ -40,11 +47,9 @@ export default class Environment {
         this.object.add(this.sun);
     }
 
-    // updatePosition() {
-    //     this.time.on("tick", () => {
-    //         this.cubeEnvironment.position.copy(
-    //             this.physics.floor.model.position
-    //         );
-    //     });
-    // }
+    updateSun() {
+        this.time.on("tick", () => {
+            this.sunMaterial.uniforms.uTime.value = this.time.elapsed;
+        });
+    }
 }

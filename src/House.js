@@ -25,12 +25,13 @@ export default class House {
             shape: this.shape,
             type: CANNON.Body.KINEMATIC,
         });
-        this.body.allowSleep = true;
         this.hitbox = new THREE.Mesh(this.geometry, this.material);
-        this.hitbox.receiveShadow = true;
-        this.hitbox.castShadow = true;
+        // this.hitbox.receiveShadow = true;
+        // this.hitbox.castShadow = true;
 
-        this.body.position.set(this.positionX, this.positionY, 3);
+        this.body.allowSleep = true;
+
+        this.body.position.set(this.positionX, this.positionY, 5);
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);

@@ -29,8 +29,8 @@ export default class Application {
         this.initRenderer();
         this.initPhysics();
         this.initCamera();
-        this.initEnvironment();
         this.initLight();
+        this.initEnvironment();
         // this.initRender();
         this.initEffects();
         this.initControls();
@@ -49,12 +49,13 @@ export default class Application {
         // Renderer
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
+            // antialias: true,
             // alpha: true,
         });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(this.sizes.width, this.sizes.height);
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        // this.renderer.shadowMap.enabled = true;
+        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.autoClear = false;
         // this.renderer.setClearColor(0x414141, 1)
         // this.renderer.setClearColor(0x000000, 1);

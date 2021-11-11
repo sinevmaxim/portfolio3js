@@ -29,11 +29,11 @@ export default class Club {
             shape: this.shape,
             type: CANNON.Body.KINEMATIC,
         });
-        this.body.allowSleep = true;
         this.hitbox = new THREE.Mesh(this.geometry, this.material);
+        // this.hitbox.receiveShadow = true;
+        // this.hitbox.castShadow = true;
 
-        this.hitbox.receiveShadow = true;
-        this.hitbox.castShadow = true;
+        this.body.allowSleep = true;
 
         this.body.position.set(this.positionX, this.positionY, 5);
         this.hitbox.position.copy(this.body.position);

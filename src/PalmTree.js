@@ -34,10 +34,11 @@ export default class PalmTree {
         this.body = new CANNON.Body({ mass: 0 });
         this.body.addShape(this.shape);
         this.body.allowSleep = true;
+
         this.hitbox = new THREE.Mesh(this.geometry, this.material);
 
-        this.hitbox.receiveShadow = true;
-        this.hitbox.castShadow = true;
+        // this.hitbox.receiveShadow = true;
+        // this.hitbox.castShadow = true;
 
         this.body.position.set(this.positionX, this.positionY, 0);
         this.hitbox.position.copy(this.body.position);

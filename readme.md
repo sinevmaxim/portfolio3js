@@ -1,4 +1,4 @@
-# Three.js - Template
+# RETROWAVE PORTFOLIO
 
 ## Setup
 

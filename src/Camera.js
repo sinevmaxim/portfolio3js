@@ -105,7 +105,7 @@ export default class Camera {
         this.offsetY = 34;
         this.offsetZ = 21;
 
-        this.cameraInstance.position.set(0, 200, 31);
+        this.cameraInstance.position.set(0, 212, 50);
 
         this.target = { x: 0, y: 212, z: 60 };
         this.cameraInstance.lookAt(
