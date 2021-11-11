@@ -3,7 +3,7 @@ import * as THREE from "three";
 
 export default class Sound {
     constructor() {
-        Howler.volume(0.65);
+        Howler.volume(0.7);
         this.car = {};
         this.tree = {};
         this.house = {};

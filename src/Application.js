@@ -26,19 +26,19 @@ export default class Application {
         };
         this.sound = new Sound();
 
+        this.initRenderer();
+        this.initPhysics();
+        this.initCamera();
+        this.initEnvironment();
+        this.initLight();
+        // this.initRender();
+        this.initEffects();
+        this.initControls();
         this.files.on("ready", () => {
-            this.initRenderer();
-            this.initLight();
-            this.initPhysics();
-            this.initControls();
             this.initCar();
-            this.initCamera();
             this.initAreas();
-            this.initEnvironment();
             this.initLandscape();
             this.initOtherCar();
-            this.initRender();
-            // this.initEffects();
         });
     }
 
@@ -102,7 +102,7 @@ export default class Application {
             time: this.time,
             renderer: this.renderer,
             sizes: this.sizes,
-            car: this.car,
+            physics: this.physics,
             files: this.files,
         });
         this.scene.add(this.camera.object);
@@ -167,7 +167,7 @@ export default class Application {
 
     initEnvironment() {
         this.environment = new Environment({
-            car: this.car,
+            physics: this.physics,
             time: this.time,
         });
 

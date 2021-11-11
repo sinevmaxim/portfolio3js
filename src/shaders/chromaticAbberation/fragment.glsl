@@ -1,18 +1,17 @@
-// void mainImage( out vec4 fragColor, in vec2 fragCoord )
-// {
-//     float aberrationAmount =  0.1 + abs(iMouse.y / iResolution.y / 8.0);
+uniform vec3 uResolution;
+uniform sampler2D uChannel0;
 
-//     vec2 uv = fragCoord.xy / iResolution.xy;
-// 	vec2 distFromCenter = uv - 0.5;
+varying vec2 vUv;
 
-//     // stronger aberration near the edges by raising to power 3
-//     vec2 aberrated = aberrationAmount * pow(distFromCenter, vec2(2.5, 2.5));
+
+void main (){
+	
+    vec2 d = abs((vUv - 0.5) * 2.0);
+    d = pow(d, vec2(12.0));
+        
+    vec4 r = texture2D(uChannel0, vUv - d * 0.015);
+    vec4 g = texture2D(uChannel0, vUv);
+    vec4 b = texture2D(uChannel0, vUv);
     
-// 	fragColor = vec4
-//     (
-//     	texture(iChannel0, uv - aberrated).r,
-//     	texture(iChannel0, uv).g,
-//     	texture(iChannel0, uv + aberrated).b,
-//     	1.0
-//     );
-// }
+    gl_FragColor = vec4(r.r, g.g, b.b, 1.0);
+}

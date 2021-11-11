@@ -10,6 +10,9 @@ export default class FileEventEmmiter extends EventEmmiter {
         this.animations = {};
         this.audioListener = new THREE.AudioListener();
 
+        this.loadingBar = document.querySelector(".loading-bar");
+        this.startButton = document.querySelector(".start-button");
+
         this.manager = new THREE.LoadingManager();
         this.manager.onLoad = () => this.ready();
         this.manager.onProgress = (url, loaded, total) =>
@@ -53,6 +56,10 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/textures/car/carShadowTexture.jpg",
                 type: "texture",
             },
+            lightAlphaMap: {
+                url: "/textures/car/lightAlphaMap2.png",
+                type: "texture",
+            },
             areaFrame: {
                 url: "/textures/areaFrame.png",
                 type: "texture",
@@ -86,11 +93,15 @@ export default class FileEventEmmiter extends EventEmmiter {
                 type: "texture",
             },
             firstPalmTree: {
-                url: "/models/PalmTree.glb",
+                url: "/models/PalmTreeLowPoly.glb",
                 type: "model",
             },
             secondPalmTree: {
-                url: "/models/PalmTree2.glb",
+                url: "/models/PalmTreeLowPoly2.glb",
+                type: "model",
+            },
+            star: {
+                url: "/models/Star.glb",
                 type: "model",
             },
         };
@@ -128,10 +139,18 @@ export default class FileEventEmmiter extends EventEmmiter {
     }
 
     ready() {
-        this.emit("ready");
+        this.loadingBar.style.visibility = `hidden`;
+        this.startButton.style.visibility = `visible`;
+        this.onStartButtonClick = () => {
+            $(".neon-text").fadeOut();
+            this.startButton.style.visibility = `hidden`;
+            this.emit("ready");
+        };
+        this.startButton.addEventListener("click", this.onStartButtonClick);
     }
 
     progress(url, loaded, total) {
-        console.info(`Files - ${(loaded / total) * 100} % items loaded`);
+        // console.info(`Files - ${(loaded / total) * 100} % items loaded`);
+        this.loadingBar.style.transform = `scaleX(${loaded / total})`;
     }
 }

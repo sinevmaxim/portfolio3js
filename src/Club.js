@@ -69,12 +69,19 @@ export default class Club {
     }
 
     initMusic() {
-        this.files.on("clubMusic_ready", () => {
+        const addMusic = () => {
             this.hitbox.add(this.files.items.clubMusic);
             this.files.items.clubMusic.setRefDistance(60);
-            this.files.items.clubMusic.setVolume(0.15);
+            this.files.items.clubMusic.setVolume(0.1);
             this.files.items.clubMusic.play();
             this.files.items.clubMusic.setLoop(true);
-        });
+        };
+        if (this.files.items.clubMusic) {
+            addMusic();
+        } else {
+            this.files.on("clubMusic_ready", () => {
+                addMusic();
+            });
+        }
     }
 }

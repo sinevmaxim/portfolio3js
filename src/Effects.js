@@ -1,8 +1,10 @@
 import * as THREE from "three";
+import * as TWEEN from "@tweenjs/tween.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import abberationFragmentShader from "./shaders/chromaticAbberation/fragment.glsl";
+import abberationVertexShader from "./shaders/chromaticAbberation/vertex.glsl";
 
 export default class Effects {
     constructor(args) {
@@ -12,28 +14,39 @@ export default class Effects {
         this.time = args.time;
         this.scene = args.scene;
 
-        let renderTarget = null;
+        this.renderTarget = null;
 
         if (
             this.renderer.getPixelRatio() === 1 &&
             this.renderer.capabilities.isWebGL2
         ) {
-            renderTarget = new THREE.WebGLMultisampleRenderTarget(800, 600, {
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                encoding: THREE.sRGBEncoding,
-            });
+            this.renderTarget = new THREE.WebGLMultisampleRenderTarget(
+                this.sizes.width,
+                this.sizes.height,
+                {
+                    minFilter: THREE.LinearFilter,
+                    magFilter: THREE.LinearFilter,
+                    format: THREE.RGBAFormat,
+                    encoding: THREE.sRGBEncoding,
+                }
+            );
         } else {
-            renderTarget = new THREE.WebGLRenderTarget(800, 600, {
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                encoding: THREE.sRGBEncoding,
-            });
+            this.renderTarget = new THREE.WebGLRenderTarget(
+                this.sizes.width,
+                this.sizes.height,
+                {
+                    minFilter: THREE.LinearFilter,
+                    magFilter: THREE.LinearFilter,
+                    format: THREE.RGBAFormat,
+                    // encoding: THREE.sRGBEncoding,
+                }
+            );
         }
         //Composer
-        this.effectComposer = new EffectComposer(this.renderer, renderTarget);
+        this.effectComposer = new EffectComposer(
+            this.renderer,
+            this.renderTarget
+        );
 
         this.effectComposer.setSize(this.sizes.width, this.sizes.height);
         this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -45,11 +58,40 @@ export default class Effects {
         );
         this.effectComposer.addPass(this.renderPass);
 
-        this.rgbShiftPass = new ShaderPass(RGBShiftShader);
+        this.rgbShiftPass = new ShaderPass({
+            vertexShader: abberationVertexShader,
+            fragmentShader: abberationFragmentShader,
+            uniforms: {
+                uResolution: {
+                    value: new THREE.Vector3(
+                        this.sizes.width,
+                        this.sizes.height,
+                        1
+                    ),
+                },
+                uChannel0: { value: this.renderTarget },
+            },
+        });
         this.effectComposer.addPass(this.rgbShiftPass);
 
         this.time.on("tick", () => {
+            this.rgbShiftPass.material.uniforms.uResolution.value.set(
+                this.sizes.width,
+                this.sizes.height,
+                1
+            );
+            // this.rgbShiftPass.material.uniforms.uChannel0.value.set(
+            //     this.renderTarget
+            // );
             this.effectComposer.render();
+            TWEEN.update();
+        });
+
+        window.addEventListener("resize", () => {
+            this.effectComposer.setSize(this.sizes.width, this.sizes.height);
+            this.effectComposer.setPixelRatio(
+                Math.min(window.devicePixelRatio, 2)
+            );
         });
     }
 }

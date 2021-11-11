@@ -18,15 +18,16 @@ export default class Collectable {
     }
 
     initModel() {
-        this.model = new THREE.Mesh(
-            new THREE.SphereBufferGeometry(1, 32, 32),
-            new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-        );
+        this.model = this.files.items.star;
+        this.model.children[0].material = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+        });
 
         this.object.add(this.model);
     }
 
     initPosition() {
+        this.model.rotation.x = Math.PI / 2;
         this.model.position.set(
             this.position.x,
             this.position.y,
@@ -37,10 +38,10 @@ export default class Collectable {
     initCollision() {
         const collision = () => {
             if (
-                this.car.position.x > this.model.position.x - 2 &&
-                this.car.position.x < this.model.position.x + 2 &&
-                this.car.position.y > this.model.position.y - 2 &&
-                this.car.position.y < this.model.position.y + 2
+                this.car.position.x > this.model.position.x - 4 &&
+                this.car.position.x < this.model.position.x + 4 &&
+                this.car.position.y > this.model.position.y - 4 &&
+                this.car.position.y < this.model.position.y + 4
             ) {
                 this.object.remove(this.model);
                 this.collect();

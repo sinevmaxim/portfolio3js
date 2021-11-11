@@ -11,10 +11,10 @@ export default class Light {
     initLights() {
         this.ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
         this.directionalLight = new THREE.DirectionalLight(0xfd00e1, 1);
-        this.directionalLight.position.set(16, 106, 30);
+        this.directionalLight.position.set(0, 106, 30);
 
-        this.directionalLight.shadow.mapSize.width = 1024;
-        this.directionalLight.shadow.mapSize.height = 1024;
+        this.directionalLight.shadow.mapSize.width = 256;
+        this.directionalLight.shadow.mapSize.height = 256;
         this.directionalLight.shadow.camera.near = 15;
         this.directionalLight.shadow.camera.far = 200;
         this.directionalLight.shadow.camera.left = -150;

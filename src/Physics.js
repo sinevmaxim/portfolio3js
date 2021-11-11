@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon";
+import floorFragmentShader from "./shaders/floor/fragment.glsl";
+import floorVertexShader from "./shaders/floor/vertex.glsl";
 
 export default class Physics {
     constructor(args) {
@@ -62,17 +64,30 @@ export default class Physics {
 
         this.floor.model = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(200, 200, 2, 2),
-            new THREE.MeshStandardMaterial({
-                map: this.files.items.floorTexture,
+            // new THREE.MeshStandardMaterial({
+            //     map: this.files.items.floorTexture,
+            // })
+            new THREE.ShaderMaterial({
+                fragmentShader: floorFragmentShader,
+                vertexShader: floorVertexShader,
+                // lights: true,
             })
         );
 
-        this.floor.model.receiveShadow = true;
+        this.floor.hitbox = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(200, 200, 2, 2),
+            new THREE.MeshBasicMaterial({
+                wireframe: true,
+            })
+        );
+
+        // this.floor.model.receiveShadow = true;
 
         this.floor.model.position.copy(this.floor.body.position);
         this.floor.model.quaternion.copy(this.floor.body.quaternion);
 
-        this.object.add(this.floor.model);
+        // this.object.add(this.floor.model);
+        // this.object.add(this.floor.hitbox);
         this.world.add(this.floor.body);
     }
 }

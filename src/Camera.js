@@ -7,28 +7,90 @@ export default class Camera {
         this.files = args.files;
         this.renderer = args.renderer;
         this.sizes = args.sizes;
-        this.car = args.car;
+        this.physics = args.physics;
 
         this.object = new THREE.Object3D();
 
         this.initCamera();
         this.initEvents();
+        this.startingScreen();
+    }
+
+    startingScreen() {
+        this.cameraOnTweenUpdate = (params) => {
+            this.cameraInstance.lookAt(
+                new THREE.Vector3(params.x, params.y, params.z)
+            );
+        };
+
+        this.onFilesReady = () => {
+            const onTweenFinish = () => {
+                this.startUpdatingCamera();
+            };
+
+            this.targetTween = new TWEEN.Tween(this.target)
+                .to(
+                    {
+                        x: 0,
+                        y: 180,
+                        z: 0,
+                    },
+                    3000
+                )
+                .easing(TWEEN.Easing.Exponential.In)
+                .onUpdate((params) => this.cameraOnTweenUpdate(params))
+                .start()
+                .onComplete(() => {
+                    this.positionTween = new TWEEN.Tween(
+                        this.cameraInstance.position
+                    )
+                        .to(
+                            {
+                                x: -this.offsetX,
+                                y: -this.offsetY,
+                                z: this.offsetZ,
+                            },
+                            3000
+                        )
+                        .easing(TWEEN.Easing.Exponential.Out)
+                        .start();
+
+                    this.target.y = -30;
+
+                    this.secondTargetTween = new TWEEN.Tween(this.target)
+                        .delay(2000)
+                        .to(
+                            {
+                                x: this.physics.floor.model.position.x,
+                                y: this.physics.floor.model.position.y,
+                                z: this.physics.floor.model.position.z,
+                            },
+                            2000
+                        )
+                        .easing(TWEEN.Easing.Exponential.In)
+                        .start()
+                        .onUpdate((params) => {
+                            this.cameraOnTweenUpdate(params);
+                        })
+                        .onComplete(onTweenFinish);
+                });
+        };
+        this.files.on("ready", this.onFilesReady);
     }
     initEvents() {
         this.updateCamera = () => {
             this.cameraInstance.position.set(
-                this.car.oldPosition.x - this.offsetX,
-                this.car.oldPosition.y - this.offsetY,
-                this.car.oldPosition.z + this.offsetZ
+                this.physics.floor.model.position.x - this.offsetX,
+                this.physics.floor.model.position.y - this.offsetY,
+                this.physics.floor.model.position.z + this.offsetZ
             );
-            this.cameraInstance.lookAt(this.car.oldPosition);
+            this.cameraInstance.lookAt(this.physics.floor.model.position);
         };
 
         this.observeCar = () => {
-            this.cameraInstance.lookAt(this.car.oldPosition);
+            this.cameraInstance.lookAt(this.physics.floor.model.position);
         };
-
-        this.startUpdatingCamera();
+        // this.startUpdatingCamera();
     }
 
     initCamera() {
@@ -43,8 +105,12 @@ export default class Camera {
         this.offsetY = 34;
         this.offsetZ = 21;
 
-        this.cameraInstance.position.set(20, 20, 20);
-        this.cameraInstance.lookAt(new THREE.Vector3());
+        this.cameraInstance.position.set(0, 200, 31);
+
+        this.target = { x: 0, y: 212, z: 60 };
+        this.cameraInstance.lookAt(
+            new THREE.Vector3(this.target.x, this.target.y, this.target.z)
+        );
 
         this.cameraInstance.add(this.files.audioListener);
         this.object.add(this.cameraInstance);
@@ -76,8 +142,8 @@ export default class Camera {
         this.tweenPosition1 = new TWEEN.Tween(this.cameraInstance.position)
             .to(
                 {
-                    x: this.car.chassis.body.position.x - 5,
-                    y: this.car.chassis.body.position.y - 5,
+                    x: this.physics.floor.model.position.x - 5,
+                    y: this.physics.floor.model.position.y - 5,
                     z: 1,
                 },
                 2000
@@ -88,29 +154,16 @@ export default class Camera {
         this.tweenPosition2 = new TWEEN.Tween(this.cameraInstance.position)
             .to(
                 {
-                    x: this.car.chassis.body.position.x - 7,
-                    y: this.car.chassis.body.position.y + 10,
+                    x: this.physics.floor.model.position.x - 7,
+                    y: this.physics.floor.model.position.y + 10,
                     z: 1,
                 },
                 2000
             )
             .easing(TWEEN.Easing.Cubic.InOut);
 
-        // this.tweenPositionFinish = new TWEEN.Tween(this.cameraInstance.position)
-        //     .to(
-        //         {
-        //             x: this.car.chassis.body.position.x - this.offsetX,
-        //             y: this.car.chassis.body.position.y - this.offsetY,
-        //             z: this.car.chassis.body.position.z + this.offsetZ,
-        //         },
-        //         1000
-        //     )
-        //     .easing(TWEEN.Easing.Cubic.InOut);
-
-        this.onTweenFinish = () => {
+        const onTweenFinish = () => {
             this.startUpdatingCamera();
-            this.car.setControls();
-            this.car.removeFromHandbrake();
         };
 
         this.tweenRotation1 = new TWEEN.Tween(this.cameraInstance.rotation)
@@ -135,16 +188,9 @@ export default class Camera {
                 2000
             )
             .easing(TWEEN.Easing.Cubic.InOut)
-            .onComplete(this.onTweenFinish);
-
-        // this.tweenRotationFinish = new TWEEN.Tween(this.cameraInstance.rotation)
-        //     .to({ x: Math.PI / 2, y: 0, z: 0 }, 1000)
-        //     .easing(TWEEN.Easing.Cubic.InOut)
-        // .onComplete(this.onTweenFinish);
+            .onComplete(onTweenFinish);
 
         this.tweenRotation1.chain(this.tweenRotation2);
-        // this.tweenRotation2.chain(this.tweenPositionFinish);
         this.tweenPosition1.chain(this.tweenPosition2);
-        // this.tweenPosition2.chain(this.tweenRotationFinish);
     }
 }

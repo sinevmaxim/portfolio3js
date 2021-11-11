@@ -12,9 +12,11 @@ export default class CollectableGenerator {
 
         this.object = new THREE.Group();
 
-        this.initShape();
+        this.initShape()
         this.generate();
+
     }
+
     initShape() {
         this.shape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
     }
