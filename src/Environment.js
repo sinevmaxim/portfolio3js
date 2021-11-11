@@ -38,8 +38,6 @@ export default class Environment {
             transparent: true,
         });
 
-        console.log(this.sunMaterial);
-
         this.sun = new THREE.Mesh(this.sunGeometry, this.sunMaterial);
         this.sun.position.set(0, 212, 60);
 
