@@ -15,7 +15,7 @@ export default class ClientCar extends Car {
         this.initSound();
         this.initShadow();
         this.initLights();
-        // this.initAnimation();
+        this.initAnimation();
         this.initControls();
         this.initCollision();
         this.updatePositionData();

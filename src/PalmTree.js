@@ -28,6 +28,9 @@ export default class PalmTree {
         this.model.receiveShadow = true;
         this.model.position.set(this.positionX, this.positionY, 0);
 
+        this.model.rotation.z =
+            ((Math.random() * Math.PI) / 4) * Math.random() < 0.5 ? 1 : -1;
+
         this.object.add(this.model);
     }
     initPhysicsObject() {

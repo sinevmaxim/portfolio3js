@@ -25,7 +25,7 @@ export default class PalmTreeGenerator {
             let tree = new PalmTree({
                 physics: this.physics,
                 files: this.files,
-                positionX: -20,
+                positionX: 13,
                 positionY: positionY,
                 geometry: this.geometry,
                 material: this.material,
