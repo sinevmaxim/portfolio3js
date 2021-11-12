@@ -44,24 +44,30 @@ export default class ClientCar extends Car {
         console.log(this.models);
 
         this.models.stopLights = this.models.chassis.children[11];
+        // this.models.frontLights = this.models.chassis.children[15];
+        this.models.reverseLights = this.models.chassis.children[12];
+
         this.models.stopLights.material = new THREE.MeshBasicMaterial({
             color: 0x440000,
         });
-        this.models.reverseLights = this.models.chassis.children[12];
-
         this.models.reverseLights.material = new THREE.MeshBasicMaterial({
             color: 0x444444,
         });
+        // this.models.frontLights.material = new THREE.MeshBasicMaterial({
+        //     color: 0x0000ff,
+        // });
 
         this.time.on("tick", () => {
             this.models.chassis.position.set(
-                this.position.x,
-                this.position.y,
-                this.position.z - 1.4
+                this.chassis.body.position.x,
+                this.chassis.body.position.y,
+                this.chassis.body.position.z - 1.4
             );
 
             this.models.chassis.quaternion.copy(this.chassis.body.quaternion);
         });
+
+        // this.models.chassis.children[0].material.color.setHex(0xff0000);
     }
 
     updatePositionData() {
