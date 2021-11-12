@@ -133,6 +133,7 @@ export default class ClientCar extends Car {
             alphaMap: this.shadow,
             transparent: true,
             color: 0x000000,
+            opacity: 0.5,
         });
 
         this.shadowObject = new THREE.Mesh(
@@ -140,7 +141,7 @@ export default class ClientCar extends Car {
             this.shadowMaterial
         );
 
-        this.shadowObject.position.set(1, 1, 1);
+        this.shadowObject.position.set(1, 1, 0.5);
         this.shadowObject.scale.set(0.75, 0.5, 1);
         this.object.add(this.shadowObject);
 
@@ -238,8 +239,8 @@ export default class ClientCar extends Car {
         this.models.chassis.add(this.light.rightSpotLight);
         this.models.chassis.add(this.light.rightSpotLight.target);
 
-        this.models.chassis.add(this.leftBakedLight);
-        this.models.chassis.add(this.rightBakedLight);
+        // this.models.chassis.add(this.leftBakedLight);
+        // this.models.chassis.add(this.rightBakedLight);
 
         document.addEventListener("keydown", (event) => {
             if (event.keyCode == 32) {

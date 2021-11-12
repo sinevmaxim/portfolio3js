@@ -18,6 +18,11 @@ body {
     src: url("../static/fonts/cosmopolitan/CosmopolitanScriptRegular.woff");
 }
 
+@font-face {
+    font-family: "Outrun future Bold";
+    src: url("../static/fonts/outrun_future/Outrun\ future\ Bold.otf");
+}
+
 .canvas {
     position: fixed;
     top: 0;
@@ -39,7 +44,7 @@ body {
 .start-button {
     background-color: #333;
     color: black;
-    border: 2px solid #333; /* Green */
+    border: 2px solid #333;
     visibility: hidden;
     position: absolute;
     top: 70%;
@@ -68,7 +73,6 @@ body {
     padding: 0.25em 0.5em;
     box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px,
         4px 4px 0px 0px, 5px 5px 0px 0px;
-    /* position: relative; */
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -100,6 +104,7 @@ body {
         0 -0.5rem 2rem #ff2448, 0 0.5rem 3rem #ff2441;
     animation: shine 2s forwards, flicker 3s infinite;
 }
+
 @keyframes blink {
     0%,
     22%,

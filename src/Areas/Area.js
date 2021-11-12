@@ -46,7 +46,7 @@ export default class Area {
         this.frame.position.set(
             this.position.xOne + this.width / 2,
             this.position.yOne + this.height / 2,
-            0.08
+            -1
         );
 
         this.object.add(this.frame);

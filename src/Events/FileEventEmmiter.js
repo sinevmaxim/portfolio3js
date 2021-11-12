@@ -32,10 +32,10 @@ export default class FileEventEmmiter extends EventEmmiter {
                 type: "model",
             },
             // carWheel: { url: "/models/car/wheel.glb", type: "model" },
-            floorTexture: {
-                url: "/textures/floor/floor.png",
-                type: "texture",
-            },
+            // floorTexture: {
+            //     url: "/textures/floor/floor.png",
+            //     type: "texture",
+            // },
             githubLogo: {
                 url: "/textures/logos/github_logo.png",
                 type: "texture",
