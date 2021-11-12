@@ -8,11 +8,6 @@ export default class Sound {
         this.tree = {};
         this.house = {};
 
-        // this.music = new Howl({
-        //     src: ["/audio/music/music.mp3"],
-        //     volume: 0.1,
-        // });
-
         this.tree.collision = new Howl({
             src: ["/audio/tree/tree_collision.wav"],
             volume: 0.1,
