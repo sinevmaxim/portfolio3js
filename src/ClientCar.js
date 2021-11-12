@@ -1,8 +1,5 @@
 import * as THREE from "three";
-import * as CANNON from "cannon";
-import * as TWEEN from "@tweenjs/tween.js";
 import Car from "./Car";
-import { MeshBasicMaterial, PlaneBufferGeometry } from "three";
 
 export default class ClientCar extends Car {
     constructor(args) {
@@ -56,9 +53,9 @@ export default class ClientCar extends Car {
 
         this.time.on("tick", () => {
             this.models.chassis.position.set(
-                this.chassis.body.position.x,
-                this.chassis.body.position.y,
-                this.chassis.body.position.z - 1.4
+                this.position.x,
+                this.position.y,
+                this.position.z - 1.4
             );
 
             this.models.chassis.quaternion.copy(this.chassis.body.quaternion);
@@ -200,8 +197,8 @@ export default class ClientCar extends Car {
 
     initLights() {
         this.leftBakedLight = new THREE.Mesh(
-            new PlaneBufferGeometry(5, 5, 10, 10),
-            new MeshBasicMaterial({
+            new THREE.PlaneBufferGeometry(5, 5, 10, 10),
+            new THREE.MeshBasicMaterial({
                 transparent: true,
                 alphaMap: this.files.items.lightAlphaMap,
                 color: 0xeeeeff,
@@ -214,8 +211,8 @@ export default class ClientCar extends Car {
         this.leftBakedLight.rotation.z = Math.PI / 2;
 
         this.rightBakedLight = new THREE.Mesh(
-            new PlaneBufferGeometry(5, 5, 10, 10),
-            new MeshBasicMaterial({
+            new THREE.PlaneBufferGeometry(5, 5, 10, 10),
+            new THREE.MeshBasicMaterial({
                 transparent: true,
                 alphaMap: this.files.items.lightAlphaMap,
                 color: 0xeeeeff,
