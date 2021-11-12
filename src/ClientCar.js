@@ -41,11 +41,13 @@ export default class ClientCar extends Car {
 
         this.object.add(this.models.chassis);
 
-        this.models.stopLights = this.models.chassis.children[12];
+        console.log(this.models);
+
+        this.models.stopLights = this.models.chassis.children[11];
         this.models.stopLights.material = new THREE.MeshBasicMaterial({
             color: 0x440000,
         });
-        this.models.reverseLights = this.models.chassis.children[13];
+        this.models.reverseLights = this.models.chassis.children[12];
 
         this.models.reverseLights.material = new THREE.MeshBasicMaterial({
             color: 0x444444,
