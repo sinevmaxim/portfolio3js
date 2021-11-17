@@ -14,11 +14,18 @@ export default class House {
 
         this.object = new THREE.Object3D();
 
-        this.initModel();
         this.initPhysicsObject();
+        this.initModel();
     }
 
-    initModel() {}
+    initModel() {
+        this.model = this.files.items.thirdHouse.clone();
+        this.model.scale.set(4.5, 4.5, 4.5);
+        this.model.position.copy(this.body.position);
+        this.model.rotation.z = -Math.PI / 2;
+        // this.model.rotation.x = Math.PI / 2;
+        this.object.add(this.model);
+    }
     initPhysicsObject() {
         this.body = new CANNON.Body({
             mass: 0,
@@ -31,7 +38,7 @@ export default class House {
 
         this.body.allowSleep = true;
 
-        this.body.position.set(this.positionX, this.positionY, 5);
+        this.body.position.set(this.positionX, this.positionY, 0);
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);

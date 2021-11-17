@@ -17,24 +17,24 @@ export default class InfoTextGenerator {
             text: this.files.items.movementInfoText,
             geometry: this.geometry,
             x: 0,
-            y: 0,
-            z: 10,
+            y: -10,
+            z: 1,
         });
 
         this.engineStartInfoText = new InfoText({
             text: this.files.items.engineStartInfoText,
             geometry: this.geometry,
-            x: 0,
-            y: 0,
-            z: 10,
+            x: -5,
+            y: -7,
+            z: 1,
         });
 
         this.popUpLightsInfoText = new InfoText({
             text: this.files.items.popUpLightsInfoText,
             geometry: this.geometry,
-            x: 0,
-            y: 0,
-            z: 10,
+            x: 10,
+            y: -10,
+            z: 1,
         });
 
         this.object.add(

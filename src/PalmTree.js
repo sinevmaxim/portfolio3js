@@ -24,9 +24,7 @@ export default class PalmTree {
                 ? this.files.items.secondPalmTree.clone()
                 : this.files.items.firstPalmTree.clone();
         this.model.scale.set(3, 3, 4);
-        this.model.castShadow = true;
-        this.model.receiveShadow = true;
-        this.model.position.set(this.positionX, this.positionY, 0);
+        this.model.position.copy(this.body.position);
 
         this.model.rotation.z =
             ((Math.random() * Math.PI) / 4) * Math.random() < 0.5 ? 1 : -1;
@@ -47,7 +45,7 @@ export default class PalmTree {
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);
-        // this.object.add(this.hitbox);
+        this.object.add(this.hitbox);
 
         this.body.addEventListener("collide", () => {
             this.sound.tree.collision.play();

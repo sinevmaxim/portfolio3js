@@ -100,6 +100,18 @@ export default class FileEventEmmiter extends EventEmmiter {
                 url: "/models/PalmTreeLowPoly2.glb",
                 type: "model",
             },
+            firstHouse: {
+                url: "/models/Houses1.glb",
+                type: "model",
+            },
+            secondHouse: {
+                url: "/models/Houses2.glb",
+                type: "model",
+            },
+            thirdHouse: {
+                url: "/models/Houses3.glb",
+                type: "model",
+            },
             star: {
                 url: "/models/Star.glb",
                 type: "model",

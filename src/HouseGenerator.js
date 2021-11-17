@@ -12,7 +12,7 @@ export default class HouseGenerator {
         this.ammount = args.ammount;
         this.car = args.car;
 
-        this.size = 10;
+        this.size = 35;
 
         this.object = new THREE.Group();
         this.generate();
@@ -20,14 +20,12 @@ export default class HouseGenerator {
 
     generate() {
         this.houses = [];
-        this.geometry = new THREE.BoxBufferGeometry(
-            this.size,
-            this.size,
-            this.size
-        );
-        this.material = new THREE.MeshStandardMaterial();
+        this.geometry = new THREE.BoxBufferGeometry(10, this.size, 3);
+        this.material = new THREE.MeshStandardMaterial({
+            wireframe: true,
+        });
         this.shape = new CANNON.Box(
-            new CANNON.Vec3(this.size / 2, this.size / 2, this.size / 2)
+            new CANNON.Vec3(10 / 2, this.size / 2, 3 / 2)
         );
 
         for (let i = 0; i < this.ammount; i++) {

@@ -35,7 +35,7 @@ export default class Club {
 
         this.body.allowSleep = true;
 
-        this.body.position.set(this.positionX, this.positionY, 5);
+        this.body.position.set(this.positionX, this.positionY, 0);
         this.hitbox.position.copy(this.body.position);
 
         this.physics.world.add(this.body);
