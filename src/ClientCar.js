@@ -24,11 +24,11 @@ export default class ClientCar extends Car {
     }
     initOptions() {
         this.options = {};
-        this.options.maxSteerVal = 0.33;
-        this.options.maxForce = 450;
+        this.options.maxSteerVal = 0.23;
+        this.options.maxForce = 300;
         this.options.maxForceMultiplier = 1;
         this.options.brakeForce = 900;
-        this.options.maxSpeed = 90;
+        this.options.maxSpeed = 60;
         this.options.maxReverseSpeed = 30;
     }
 
